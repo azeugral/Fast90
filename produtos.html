@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Produtos Recomendados — Kit Completo para os 90 Dias | FAST90</title>
+<meta name="description" content="Produtos selecionados pra apoiar sua jornada nos 90 dias: cápsulas, whey, creatina e acessórios — com prós, contras e indicação de uso.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --ink:        #1C1410;
+    --ink-soft:   #2A2019;
+    --cream:      #FBF3E7;
+    --cream-soft: #F3E7D6;
+    --rust:       #B8511F;
+    --rust-light: #D06B34;
+    --sage:       #6E7A55;
+    --gold:       #D4A054;
+    --stone:      #A89A8A;
+    --stone-dark: #7A6F63;
+
+    --serif: 'Instrument Serif', Georgia, serif;
+    --sans:  'Manrope', -apple-system, sans-serif;
+    --mono:  'Space Grotesk', monospace;
+    --container: 1180px;
+    --ease: cubic-bezier(.22,.61,.36,1);
+  }
+  *{ margin:0; padding:0; box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+  @media (prefers-reduced-motion: reduce){
+    html{ scroll-behavior:auto; }
+    *{ animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important; }
+  }
+  body{ font-family:var(--sans); background:var(--cream); color:var(--ink); -webkit-font-smoothing:antialiased; overflow-x:hidden; }
+  img{ max-width:100%; display:block; }
+  a{ color:inherit; text-decoration:none; }
+  button{ font-family:inherit; cursor:pointer; border:none; background:none; }
+  ul{ list-style:none; }
+  .wrap{ max-width:var(--container); margin:0 auto; padding:0 32px; }
+
+  .eyebrow{ font-family:var(--mono); font-size:12px; letter-spacing:.18em; text-transform:uppercase; color:var(--rust); font-weight:600; display:inline-flex; align-items:center; gap:10px; }
+  .eyebrow::before{ content:''; width:24px; height:1px; background:var(--rust); display:inline-block; }
+  .dark .eyebrow{ color:var(--gold); } .dark .eyebrow::before{ background:var(--gold); }
+
+  h1,h2,h3{ font-family:var(--serif); font-weight:400; line-height:1.08; letter-spacing:-.01em; }
+  .section-title{ font-size:clamp(30px,4vw,48px); margin:14px 0 16px; }
+  .section-title em{ font-style:italic; color:var(--rust); }
+  .lede{ font-size:17px; line-height:1.75; color:var(--stone-dark); max-width:600px; }
+  .dark .lede{ color:#D9CFC2; }
+
+  section{ padding:90px 0; }
+  @media (max-width:768px){ section{ padding:56px 0; } }
+  .dark{ background:var(--ink); color:var(--cream); }
+  .light{ background:var(--cream); color:var(--ink); }
+
+  .reveal{ opacity:0; transform:translateY(24px); transition:opacity .8s var(--ease), transform .8s var(--ease); }
+  .reveal.in{ opacity:1; transform:translateY(0); }
+
+  header{ position:fixed; top:0; left:0; right:0; z-index:900; padding:22px 0; transition:background .4s, padding .4s, border-color .4s; border-bottom:1px solid transparent; }
+  header.scrolled{ background:rgba(28,20,16,.86); backdrop-filter:blur(10px); padding:14px 0; border-color:rgba(255,255,255,.08); }
+  nav{ display:flex; align-items:center; justify-content:space-between; }
+  .logo{ font-family:var(--serif); font-size:22px; color:var(--cream); }
+  .logo span{ color:var(--rust-light); font-style:italic; }
+  .nav-back{ font-size:13px; color:var(--cream); opacity:.75; display:flex; align-items:center; gap:8px; }
+  .nav-back:hover{ opacity:1; }
+
+  /* ============ HERO ============ */
+  .prod-hero{ min-height:48vh; display:flex; align-items:center; background:var(--ink); color:var(--cream); padding-top:120px; }
+  .prod-hero h1{ font-size:clamp(32px,4.6vw,54px); margin:16px 0 18px; }
+  .prod-hero h1 em{ font-style:italic; color:var(--rust-light); }
+
+  .disclosure{
+    display:inline-flex; align-items:flex-start; gap:12px; margin-top:28px; padding:16px 20px;
+    background:rgba(255,255,255,.05); border:1px solid rgba(212,160,84,.3); border-radius:3px; max-width:600px;
+  }
+  .disclosure svg{ flex-shrink:0; margin-top:2px; color:var(--gold); width:17px; height:17px; }
+  .disclosure p{ font-size:13px; color:#D9CFC2; line-height:1.6; }
+
+  /* ============ FILTROS ============ */
+  .filters{ display:flex; flex-wrap:wrap; gap:10px; margin:44px 0 8px; }
+  .filter-pill{
+    font-family:var(--mono); font-size:12px; letter-spacing:.06em; text-transform:uppercase;
+    padding:10px 20px; border:1px solid var(--stone); border-radius:30px; color:var(--stone-dark);
+    transition:all .25s var(--ease);
+  }
+  .filter-pill:hover{ border-color:var(--rust); color:var(--rust); }
+  .filter-pill.active{ background:var(--ink); border-color:var(--ink); color:var(--cream); }
+
+  /* ============ GRID DE PRODUTOS ============ */
+  .prod-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:26px; margin-top:40px; }
+  @media (max-width:980px){ .prod-grid{ grid-template-columns:repeat(2,1fr); } }
+  @media (max-width:680px){ .prod-grid{ grid-template-columns:1fr; } }
+
+  .prod-card{
+    background:var(--cream-soft); border:1px solid #E4D6C3; border-radius:3px; overflow:hidden;
+    display:flex; flex-direction:column; transition:transform .35s var(--ease), box-shadow .35s var(--ease), opacity .3s, display .3s;
+  }
+  .prod-card:hover{ transform:translateY(-6px); box-shadow:0 30px 60px -34px rgba(28,20,16,.28); }
+  .prod-card.hidden{ display:none; }
+
+  .prod-img{
+    aspect-ratio:4/3; background:linear-gradient(150deg,#E4D6C3,#D4C3A8);
+    display:flex; align-items:center; justify-content:center; position:relative;
+  }
+  .prod-img span{ font-family:var(--mono); font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--stone-dark); }
+  .prod-partner{
+    position:absolute; top:12px; right:12px; background:var(--ink); color:var(--cream);
+    font-family:var(--mono); font-size:10px; letter-spacing:.08em; text-transform:uppercase;
+    padding:5px 10px; border-radius:20px;
+  }
+
+  .prod-body{ padding:26px; display:flex; flex-direction:column; gap:14px; flex-grow:1; }
+  .prod-cat{ font-family:var(--mono); font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--rust); }
+  .prod-name{ font-family:var(--serif); font-size:23px; }
+  .prod-desc{ font-size:14px; color:var(--stone-dark); line-height:1.6; }
+  .prod-for{ font-size:12.5px; color:var(--ink); background:#EDE0CC; display:inline-block; padding:6px 12px; border-radius:20px; width:fit-content; }
+
+  .prod-proscons{ display:flex; flex-direction:column; gap:6px; font-size:13px; }
+  .prod-proscons li{ display:flex; gap:8px; align-items:flex-start; color:var(--stone-dark); line-height:1.5; }
+  .prod-proscons .pro svg{ color:var(--sage); }
+  .prod-proscons .con svg{ color:var(--rust); }
+  .prod-proscons svg{ flex-shrink:0; margin-top:2px; width:13px; height:13px; }
+
+  .prod-usage{ font-size:12.5px; color:var(--stone); line-height:1.6; border-top:1px dashed #D4C3A8; padding-top:12px; }
+
+  .prod-footer{ display:flex; align-items:center; justify-content:space-between; margin-top:auto; padding-top:16px; }
+  .prod-price{ font-family:var(--serif); font-size:18px; }
+  .prod-price span{ font-family:var(--mono); font-size:10.5px; color:var(--stone); display:block; }
+  .prod-cta{
+    font-family:var(--mono); font-size:11.5px; letter-spacing:.06em; text-transform:uppercase;
+    background:var(--rust); color:var(--cream); padding:12px 18px; border-radius:2px;
+    transition:background .25s, transform .25s;
+  }
+  .prod-cta:hover{ background:var(--rust-light); transform:translateY(-2px); }
+
+  /* ============ KIT COMPLETO ============ */
+  .kit-list{ display:flex; flex-direction:column; margin-top:50px; border-top:1px solid rgba(255,255,255,.1); }
+  .kit-item{
+    display:flex; align-items:center; gap:26px; padding:26px 4px; border-bottom:1px solid rgba(255,255,255,.1);
+    transition:background .25s;
+  }
+  .kit-item:hover{ background:rgba(255,255,255,.03); }
+  .kit-badge{
+    font-family:var(--serif); font-size:26px; color:var(--gold); width:52px; height:52px; border-radius:50%;
+    border:1px solid rgba(212,160,84,.4); display:flex; align-items:center; justify-content:center; flex-shrink:0;
+  }
+  .kit-info{ flex-grow:1; }
+  .kit-info .kit-cat{ font-family:var(--mono); font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--stone); }
+  .kit-info h4{ font-family:var(--serif); font-size:22px; margin-top:4px; }
+  .kit-partner{
+    font-family:var(--mono); font-size:10.5px; letter-spacing:.06em; text-transform:uppercase; color:var(--stone);
+    border:1px solid rgba(255,255,255,.15); padding:5px 12px; border-radius:20px; flex-shrink:0;
+  }
+  .kit-cta{
+    font-family:var(--mono); font-size:11.5px; letter-spacing:.06em; text-transform:uppercase;
+    background:var(--gold); color:var(--ink); padding:11px 20px; border-radius:2px; flex-shrink:0;
+    transition:background .25s, transform .25s;
+  }
+  .kit-cta:hover{ background:#E3B571; transform:translateY(-2px); }
+  @media (max-width:700px){
+    .kit-item{ flex-wrap:wrap; }
+    .kit-partner{ order:1; }
+    .kit-cta{ order:2; margin-left:auto; }
+  }
+
+  footer{ padding:50px 0 34px; }
+  .foot-bottom{ display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:14px; padding-top:24px; border-top:1px solid rgba(255,255,255,.1); }
+  .foot-bottom p{ font-size:12.5px; color:var(--stone); max-width:680px; line-height:1.6; }
+  .foot-legal{ font-size:12px; color:#7A6F63; white-space:nowrap; }
+
+  ::selection{ background:var(--rust); color:var(--cream); }
+</style>
+</head>
+<body>
+
+<header id="siteHeader">
+  <div class="wrap">
+    <nav>
+      <a href="index.html" class="logo">FAST<span>90</span></a>
+      <a href="index.html" class="nav-back">← Voltar ao Projeto 90 Dias</a>
+    </nav>
+  </div>
+</header>
+
+<!-- ============ HERO ============ -->
+<section class="prod-hero">
+  <div class="wrap">
+    <span class="eyebrow">Recomendações da fast90</span>
+    <h1>Produtos que <em>apoiam</em> sua jornada.</h1>
+    <p class="lede">Selecionamos itens que usamos e recomendamos pros 90 dias — sem enrolação, com prós, contras e pra quem cada um é indicado.</p>
+
+    <div class="disclosure">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+      <p>Este site pode receber uma comissão por compras feitas através dos links abaixo, sem nenhum custo adicional pra você. Isso não influencia nossas recomendações — só indicamos o que realmente usaríamos.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CATÁLOGO ============ -->
+<section class="light">
+  <div class="wrap">
+    <span class="eyebrow reveal">Catálogo completo</span>
+    <h2 class="section-title reveal">Escolha por <em>categoria.</em></h2>
+
+    <div class="filters">
+      <button class="filter-pill active" data-filter="todos">Todos</button>
+      <button class="filter-pill" data-filter="capsulas">Cápsulas</button>
+      <button class="filter-pill" data-filter="whey">Whey</button>
+      <button class="filter-pill" data-filter="creatina">Creatina</button>
+      <button class="filter-pill" data-filter="coqueteleira">Coqueteleiras</button>
+      <button class="filter-pill" data-filter="balanca">Balanças</button>
+      <button class="filter-pill" data-filter="marmita">Marmitas</button>
+    </div>
+
+    <div class="prod-grid" id="prodGrid">
+
+      <!-- CÁPSULAS -->
+      <div class="prod-card reveal" data-cat="capsulas">
+        <div class="prod-img"><span>[Foto do produto]</span><span class="prod-partner">Monetizze</span></div>
+        <div class="prod-body">
+          <span class="prod-cat">Cápsulas</span>
+          <h3 class="prod-name">[Nome do Suplemento]</h3>
+          <p class="prod-desc">[Substituir — descrição curta do produto, escrita por você, sem termos médicos ou promessa de resultado.]</p>
+          <span class="prod-for">Indicado para quem já tem rotina alimentar estruturada</span>
+          <ul class="prod-proscons">
+            <li class="pro"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg> Prático de incluir na rotina</li>
+            <li class="con"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg> Efeito varia de pessoa pra pessoa</li>
+          </ul>
+          <p class="prod-usage">Como usar: siga as instruções da embalagem. Consulte um profissional de saúde antes de iniciar o uso.</p>
+          <div class="prod-footer">
+            <div class="prod-price">R$ 00<span>à vista</span></div>
+            <a href="#" class="prod-cta" target="_blank" rel="sponsored noopener noreferrer">Comprar →</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- WHEY -->
+      <div class="prod-card reveal" data-cat="whey">
+        <div class="prod-img"><span>[Foto do produto]</span><span class="prod-partner">Amazon</span></div>
+        <div class="prod-body">
+          <span class="prod-cat">Whey Protein</span>
+          <h3 class="prod-name">[Nome / Marca do Whey]</h3>
+          <p class="prod-desc">[Substituir — descrição curta: sabor, textura, o que você gosta nele.]</p>
+          <span class="prod-for">Indicado para complementar a ingestão de proteína no dia a dia</span>
+          <ul class="prod-proscons">
+            <li class="pro"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg> Boa relação custo-benefício</li>
+            <li class="con"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg> Precisa de coqueteleira à parte</li>
+          </ul>
+          <p class="prod-usage">Como usar: dilua conforme a tabela da embalagem. Não substitui uma alimentação equilibrada.</p>
+          <div class="prod-footer">
+            <div class="prod-price">R$ 00<span>por unidade</span></div>
+            <a href="#" class="prod-cta" target="_blank" rel="sponsored noopener noreferrer">Comprar →</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- CREATINA -->
+      <div class="prod-card reveal" data-cat="creatina">
+        <div class="prod-img"><span>[Foto do produto]</span><span class="prod-partner">Amazon</span></div>
+        <div class="prod-body">
+          <span class="prod-cat">Creatina</span>
+          <h3 class="prod-name">[Nome / Marca da Creatina]</h3>
+          <p class="prod-desc">[Substituir — descrição curta do produto.]</p>
+          <span class="prod-for">Indicado para quem já treina com regularidade</span>
+          <ul class="prod-proscons">
+            <li class="pro"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg> Sem sabor, fácil de misturar</li>
+            <li class="con"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg> Uso contínuo é o que faz diferença</li>
+          </ul>
+          <p class="prod-usage">Como usar: conforme indicação da embalagem. Consulte um profissional antes de iniciar o uso.</p>
+          <div class="prod-footer">
+            <div class="prod-price">R$ 00<span>por unidade</span></div>
+            <a href="#" class="prod-cta" target="_blank" rel="sponsored noopener noreferrer">Comprar →</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- COQUETELEIRA -->
+      <div class="prod-card reveal" data-cat="coqueteleira">
+        <div class="prod-img"><span>[Foto do produto]</span><span class="prod-partner">Amazon</span></div>
+        <div class="prod-body">
+          <span class="prod-cat">Coqueteleira</span>
+          <h3 class="prod-name">[Nome / Marca da Coqueteleira]</h3>
+          <p class="prod-desc">[Substituir — descrição curta: compartimentos, capacidade, material.]</p>
+          <span class="prod-for">Indicado pra quem treina fora de casa</span>
+          <ul class="prod-proscons">
+            <li class="pro"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg> Compartimento extra pra suplemento</li>
+            <li class="con"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg> Precisa lavar logo após o uso</li>
+          </ul>
+          <p class="prod-usage">Uso diário, compatível com a maioria dos suplementos em pó.</p>
+          <div class="prod-footer">
+            <div class="prod-price">R$ 00<span>por unidade</span></div>
+            <a href="#" class="prod-cta" target="_blank" rel="sponsored noopener noreferrer">Comprar →</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- BALANÇA -->
+      <div class="prod-card reveal" data-cat="balanca">
+        <div class="prod-img"><span>[Foto do produto]</span><span class="prod-partner">Amazon</span></div>
+        <div class="prod-body">
+          <span class="prod-cat">Balança</span>
+          <h3 class="prod-name">[Nome / Marca da Balança]</h3>
+          <p class="prod-desc">[Substituir — descrição curta: o que ela mede, app compatível, etc.]</p>
+          <span class="prod-for">Indicado pra quem quer acompanhar a evolução ao longo dos 90 dias</span>
+          <ul class="prod-proscons">
+            <li class="pro"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg> Sincroniza com app no celular</li>
+            <li class="con"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg> Medidas de composição são estimativas</li>
+          </ul>
+          <p class="prod-usage">Use sempre no mesmo horário do dia pra comparações mais consistentes.</p>
+          <div class="prod-footer">
+            <div class="prod-price">R$ 00<span>por unidade</span></div>
+            <a href="#" class="prod-cta" target="_blank" rel="sponsored noopener noreferrer">Comprar →</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- MARMITA -->
+      <div class="prod-card reveal" data-cat="marmita">
+        <div class="prod-img"><span>[Foto do produto]</span><span class="prod-partner">Amazon</span></div>
+        <div class="prod-body">
+          <span class="prod-cat">Marmitas</span>
+          <h3 class="prod-name">[Nome / Kit de Marmitas]</h3>
+          <p class="prod-desc">[Substituir — descrição curta: quantidade de potes, material, se vai no microondas.]</p>
+          <span class="prod-for">Indicado pra quem organiza as refeições da semana</span>
+          <ul class="prod-proscons">
+            <li class="pro"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg> Compartimentos ajudam no controle de porções</li>
+            <li class="con"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg> Ocupa mais espaço na geladeira</li>
+          </ul>
+          <p class="prod-usage">Compatível com microondas e geladeira — confira as instruções do fabricante.</p>
+          <div class="prod-footer">
+            <div class="prod-price">R$ 00<span>kit</span></div>
+            <a href="#" class="prod-cta" target="_blank" rel="sponsored noopener noreferrer">Comprar →</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============ KIT COMPLETO 90 DIAS ============ -->
+<section class="dark">
+  <div class="wrap">
+    <span class="eyebrow reveal">Curadoria fast90</span>
+    <h2 class="section-title reveal">Meu kit completo <em>para os 90 dias.</em></h2>
+    <p class="lede reveal">Se você não quer escolher item por item, esse é o combo que eu mesmo usaria do início ao fim do programa.</p>
+
+    <div class="kit-list">
+      <div class="kit-item reveal">
+        <span class="kit-badge">01</span>
+        <div class="kit-info"><span class="kit-cat">Cápsulas</span><h4>[Nome do Suplemento]</h4></div>
+        <span class="kit-partner">Monetizze</span>
+        <a href="#" class="kit-cta" target="_blank" rel="sponsored noopener noreferrer">Ver produto</a>
+      </div>
+      <div class="kit-item reveal">
+        <span class="kit-badge">02</span>
+        <div class="kit-info"><span class="kit-cat">Whey</span><h4>[Nome / Marca do Whey]</h4></div>
+        <span class="kit-partner">Amazon</span>
+        <a href="#" class="kit-cta" target="_blank" rel="sponsored noopener noreferrer">Ver produto</a>
+      </div>
+      <div class="kit-item reveal">
+        <span class="kit-badge">03</span>
+        <div class="kit-info"><span class="kit-cat">Creatina</span><h4>[Nome / Marca da Creatina]</h4></div>
+        <span class="kit-partner">Amazon</span>
+        <a href="#" class="kit-cta" target="_blank" rel="sponsored noopener noreferrer">Ver produto</a>
+      </div>
+      <div class="kit-item reveal">
+        <span class="kit-badge">04</span>
+        <div class="kit-info"><span class="kit-cat">Coqueteleira</span><h4>[Nome / Marca da Coqueteleira]</h4></div>
+        <span class="kit-partner">Amazon</span>
+        <a href="#" class="kit-cta" target="_blank" rel="sponsored noopener noreferrer">Ver produto</a>
+      </div>
+      <div class="kit-item reveal">
+        <span class="kit-badge">05</span>
+        <div class="kit-info"><span class="kit-cat">Balança</span><h4>[Nome / Marca da Balança]</h4></div>
+        <span class="kit-partner">Amazon</span>
+        <a href="#" class="kit-cta" target="_blank" rel="sponsored noopener noreferrer">Ver produto</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="dark">
+  <div class="wrap">
+    <div class="foot-bottom">
+      <p>Este site participa de programas de afiliados (Amazon, Monetizze e Hotmart) e pode receber comissão por compras realizadas através dos links de produtos, sem custo adicional para você. Suplementos não substituem uma alimentação equilibrada — consulte um profissional de saúde antes de iniciar o uso.</p>
+      <span class="foot-legal">© 2026 FAST90. Todos os direitos reservados.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+const header = document.getElementById('siteHeader');
+window.addEventListener('scroll', () => { header.classList.toggle('scrolled', window.scrollY > 40); }, { passive:true });
+
+const revealEls = document.querySelectorAll('.reveal');
+const io = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+}, { threshold:.12, rootMargin:'0px 0px -60px 0px' });
+revealEls.forEach(el => io.observe(el));
+
+/* ============ FILTRO DE CATEGORIA ============ */
+const filterPills = document.querySelectorAll('.filter-pill');
+const prodCards = document.querySelectorAll('.prod-card');
+filterPills.forEach(pill => {
+  pill.addEventListener('click', () => {
+    filterPills.forEach(p => p.classList.remove('active'));
+    pill.classList.add('active');
+    const f = pill.dataset.filter;
+    prodCards.forEach(card => {
+      const show = f === 'todos' || card.dataset.cat === f;
+      card.classList.toggle('hidden', !show);
+    });
+  });
+});
+</script>
+</body>
+</html>

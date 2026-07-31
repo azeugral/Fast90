@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calculadora de IMC Grátis e Interativa — Calcule seu IMC em Tempo Real | FAST90</title>
+<meta name="description" content="Calculadora de IMC online, grátis e interativa. Arraste os controles e veja seu Índice de Massa Corporal em tempo real, com faixa de peso saudável para sua altura.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {"@type":"Question","name":"O que é IMC?","acceptedAnswer":{"@type":"Answer","text":"IMC (Índice de Massa Corporal) é uma medida que relaciona peso e altura, usada como referência populacional para triagem de faixas de peso."}},
+    {"@type":"Question","name":"Como calcular o IMC manualmente?","acceptedAnswer":{"@type":"Answer","text":"Divida seu peso em quilogramas pelo quadrado da sua altura em metros: IMC = peso / (altura x altura)."}},
+    {"@type":"Question","name":"IMC alto significa que estou com sobrepeso?","acceptedAnswer":{"@type":"Answer","text":"O IMC é apenas um indicativo. Ele não diferencia massa muscular de gordura corporal, então atletas e pessoas com mais massa magra podem ter IMC elevado sem excesso de gordura."}},
+    {"@type":"Question","name":"Qual o IMC considerado ideal?","acceptedAnswer":{"@type":"Answer","text":"Segundo a Organização Mundial da Saúde, a faixa de 18,5 a 24,9 é classificada como peso adequado para a maioria dos adultos, mas fatores individuais devem sempre ser considerados."}}
+  ]
+}
+</script>
+
+<style>
+  :root{
+    --ink:        #1C1410;
+    --ink-soft:   #2A2019;
+    --ink-glass:  rgba(255,255,255,.05);
+    --cream:      #FBF3E7;
+    --cream-soft: #F3E7D6;
+    --rust:       #B8511F;
+    --rust-light: #D06B34;
+    --sage:       #6E7A55;
+    --gold:       #D4A054;
+    --stone:      #A89A8A;
+    --stone-dark: #7A6F63;
+
+    --serif: 'Instrument Serif', Georgia, serif;
+    --sans:  'Manrope', -apple-system, sans-serif;
+    --mono:  'Space Grotesk', monospace;
+    --container: 1180px;
+    --ease: cubic-bezier(.22,.61,.36,1);
+  }
+  *{ margin:0; padding:0; box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+  @media (prefers-reduced-motion: reduce){
+    html{ scroll-behavior:auto; }
+    *{ animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important; }
+  }
+  body{ font-family:var(--sans); background:var(--cream); color:var(--ink); -webkit-font-smoothing:antialiased; overflow-x:hidden; }
+  a{ color:inherit; text-decoration:none; }
+  button{ font-family:inherit; cursor:pointer; border:none; background:none; }
+  ul{ list-style:none; }
+  .wrap{ max-width:var(--container); margin:0 auto; padding:0 32px; }
+
+  .eyebrow{ font-family:var(--mono); font-size:12px; letter-spacing:.18em; text-transform:uppercase; color:var(--rust); font-weight:600; display:inline-flex; align-items:center; gap:10px; }
+  .eyebrow::before{ content:''; width:24px; height:1px; background:var(--rust); display:inline-block; }
+  .dark .eyebrow{ color:var(--gold); } .dark .eyebrow::before{ background:var(--gold); }
+
+  h1,h2,h3{ font-family:var(--serif); font-weight:400; line-height:1.08; letter-spacing:-.01em; }
+  .section-title{ font-size:clamp(28px,3.6vw,44px); margin:14px 0 16px; }
+  .section-title em{ font-style:italic; color:var(--rust); }
+  .lede{ font-size:16.5px; line-height:1.75; color:var(--stone-dark); max-width:560px; }
+  .dark .lede{ color:#D9CFC2; }
+
+  section{ padding:100px 0; }
+  @media (max-width:768px){ section{ padding:60px 0; } }
+  .dark{ background:var(--ink); color:var(--cream); }
+  .light{ background:var(--cream); color:var(--ink); }
+
+  .reveal{ opacity:0; transform:translateY(26px); transition:opacity .9s var(--ease), transform .9s var(--ease); }
+  .reveal.in{ opacity:1; transform:translateY(0); }
+  .reveal-delay-1{ transition-delay:.1s; } .reveal-delay-2{ transition-delay:.2s; }
+
+  header{ position:fixed; top:0; left:0; right:0; z-index:900; padding:22px 0; transition:background .4s, padding .4s, border-color .4s; border-bottom:1px solid transparent; }
+  header.scrolled{ background:rgba(28,20,16,.86); backdrop-filter:blur(10px); padding:14px 0; border-color:rgba(255,255,255,.08); }
+  nav{ display:flex; align-items:center; justify-content:space-between; }
+  .logo{ font-family:var(--serif); font-size:22px; color:var(--cream); }
+  .logo span{ color:var(--rust-light); font-style:italic; }
+  .nav-back{ font-size:13px; color:var(--cream); opacity:.75; display:flex; align-items:center; gap:8px; }
+  .nav-back:hover{ opacity:1; }
+
+  /* ============ HERO / CALCULADORA ============ */
+  .imc-hero{
+    min-height:100svh; min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center;
+    background:var(--ink); color:var(--cream); position:relative; overflow:hidden;
+    padding:130px 32px 60px;
+  }
+  #particleCanvas{ position:absolute; inset:0; width:100%; height:100%; opacity:.5; z-index:0; }
+  .imc-hero::after{
+    content:''; position:absolute; inset:0; z-index:1;
+    background:radial-gradient(circle at 50% 0%, rgba(184,81,31,.18), transparent 60%);
+  }
+  .imc-hero-inner{ position:relative; z-index:2; width:100%; max-width:1040px; text-align:center; }
+  .imc-hero-inner h1{ font-size:clamp(32px,4.4vw,52px); margin:16px 0 12px; }
+  .imc-hero-inner h1 em{ font-style:italic; color:var(--rust-light); }
+  .imc-hero-inner .lede{ margin:0 auto 44px; text-align:center; }
+  .imc-hero .eyebrow{ justify-content:center; }
+
+  .calc-panel{
+    background:var(--ink-glass); border:1px solid rgba(212,160,84,.25); border-radius:4px;
+    backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px);
+    padding:44px; display:grid; grid-template-columns:1fr 1fr; gap:50px; align-items:center;
+    box-shadow:0 40px 100px -40px rgba(0,0,0,.6);
+  }
+  @media (max-width:860px){ .calc-panel{ grid-template-columns:1fr; gap:34px; padding:32px 26px; } }
+
+  /* sliders */
+  .sliders{ display:flex; flex-direction:column; gap:32px; text-align:left; }
+  .slider-field .slider-head{ display:flex; justify-content:space-between; align-items:baseline; margin-bottom:14px; }
+  .slider-label{ font-family:var(--mono); font-size:11.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--stone); }
+  .slider-value{ font-family:var(--serif); font-size:28px; color:var(--cream); }
+  .slider-value .unit{ font-family:var(--mono); font-size:13px; color:var(--stone); margin-left:4px; }
+
+  input[type="range"]{
+    -webkit-appearance:none; appearance:none; width:100%; height:5px; border-radius:3px; outline:none;
+    background:linear-gradient(to right, var(--gold) 0%, rgba(255,255,255,.14) 0%);
+  }
+  input[type="range"]::-webkit-slider-thumb{
+    -webkit-appearance:none; width:22px; height:22px; border-radius:50%;
+    background:var(--gold); border:3px solid var(--ink); cursor:grab;
+    box-shadow:0 4px 14px rgba(0,0,0,.4); transition:transform .18s var(--ease);
+  }
+  input[type="range"]::-webkit-slider-thumb:hover{ transform:scale(1.18); }
+  input[type="range"]::-webkit-slider-thumb:active{ cursor:grabbing; transform:scale(1.1); }
+  input[type="range"]::-moz-range-thumb{
+    width:22px; height:22px; border-radius:50%; background:var(--gold); border:3px solid var(--ink); cursor:grab;
+    box-shadow:0 4px 14px rgba(0,0,0,.4);
+  }
+  input[type="range"]::-moz-range-track{ height:5px; border-radius:3px; background:rgba(255,255,255,.14); }
+
+  .healthy-range{ margin-top:6px; font-size:13px; color:var(--stone); font-family:var(--mono); }
+  .healthy-range strong{ color:var(--sage); font-weight:600; }
+
+  /* gauge */
+  .gauge-col{ display:flex; flex-direction:column; align-items:center; }
+  .gauge-svg{ width:100%; max-width:300px; }
+  .gauge-tick{ font-family:var(--mono); font-size:11px; fill:var(--stone); }
+  #needle{ transform-origin:150px 150px; transition:transform .28s var(--ease); }
+  #fillArc{ transition:stroke-dashoffset .28s var(--ease); }
+
+  .gauge-result{ text-align:center; margin-top:-18px; }
+  .result-number{ font-family:var(--serif); font-size:60px; color:var(--cream); line-height:1; transition:color .3s; }
+  .result-category{ font-family:var(--mono); font-size:12.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--gold); margin-top:8px; }
+  .result-note{ font-size:13.5px; color:#D9CFC2; margin-top:10px; max-width:260px; line-height:1.6; }
+
+  .calc-disclaimer{ font-size:12px; color:var(--stone); margin-top:34px; max-width:600px; text-align:center; line-height:1.6; }
+
+  /* ============ O QUE O IMC NÃO MOSTRA ============ */
+  .limits-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:22px; margin-top:52px; }
+  .limit-card{
+    padding:34px 28px; border:1px solid #E4D6C3; border-radius:3px; background:var(--cream-soft);
+    transition:transform .3s var(--ease), box-shadow .3s var(--ease), border-color .3s;
+  }
+  .limit-card:hover{ transform:translateY(-6px); box-shadow:0 24px 50px -30px rgba(28,20,16,.25); border-color:var(--rust); }
+  .limit-icon{ width:38px; height:38px; border-radius:50%; background:var(--ink); display:flex; align-items:center; justify-content:center; margin-bottom:18px; }
+  .limit-icon svg{ width:17px; height:17px; color:var(--gold); }
+  .limit-card h4{ font-family:var(--serif); font-size:22px; margin-bottom:10px; }
+  .limit-card p{ font-size:14.5px; color:var(--stone-dark); line-height:1.65; }
+  @media (max-width:860px){ .limits-grid{ grid-template-columns:1fr; } }
+
+  /* ============ BRIDGE ============ */
+  .bridge{ text-align:center; }
+  .btn-primary{
+    font-family:var(--mono); font-size:13px; letter-spacing:.08em; text-transform:uppercase;
+    background:var(--rust); color:var(--cream); padding:18px 34px; border-radius:2px;
+    display:inline-block; margin-top:26px; transition:background .25s, transform .25s, box-shadow .25s;
+  }
+  .btn-primary:hover{ background:var(--rust-light); transform:translateY(-2px); box-shadow:0 14px 30px -10px rgba(184,81,31,.5); }
+
+  /* ============ FAQ ============ */
+  .faq-list{ max-width:760px; margin:46px auto 0; }
+  .faq-item{ border-bottom:1px solid #E4D6C3; }
+  .faq-q{ width:100%; display:flex; justify-content:space-between; align-items:center; padding:24px 4px; font-size:16px; font-weight:600; text-align:left; background:none; }
+  .faq-q .plus{ font-family:var(--mono); font-size:20px; color:var(--rust); transition:transform .3s var(--ease); flex-shrink:0; margin-left:20px; }
+  .faq-item.open .plus{ transform:rotate(45deg); }
+  .faq-a{ max-height:0; overflow:hidden; transition:max-height .4s var(--ease); }
+  .faq-a p{ padding:0 4px 24px; color:var(--stone-dark); line-height:1.7; font-size:14.5px; max-width:640px; }
+
+  footer{ padding:50px 0 34px; }
+  .foot-bottom{ display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:14px; padding-top:24px; border-top:1px solid rgba(255,255,255,.1); }
+  .foot-bottom p{ font-size:12.5px; color:var(--stone); max-width:640px; line-height:1.6; }
+  .foot-legal{ font-size:12px; color:#7A6F63; }
+
+  ::selection{ background:var(--rust); color:var(--cream); }
+
+  .scroll-hint{
+    position:relative; z-index:2; margin-top:38px; display:flex; flex-direction:column; align-items:center; gap:8px;
+    font-family:var(--mono); font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--stone);
+  }
+  .scroll-hint .line{ width:1px; height:26px; background:var(--stone); position:relative; overflow:hidden; }
+  .scroll-hint .line::after{ content:''; position:absolute; top:-100%; left:0; width:100%; height:100%; background:var(--gold); animation:scrollline 1.8s infinite ease-in-out; }
+  @keyframes scrollline{ 50%{ top:100%; } 100%{ top:100%; } }
+</style>
+</head>
+<body>
+
+<header id="siteHeader">
+  <div class="wrap">
+    <nav>
+      <a href="index.html" class="logo">FAST<span>90</span></a>
+      <a href="index.html" class="nav-back">← Voltar ao Projeto 90 Dias</a>
+    </nav>
+  </div>
+</header>
+
+<!-- ============ HERO = CALCULADORA ============ -->
+<section class="imc-hero">
+  <canvas id="particleCanvas"></canvas>
+  <div class="imc-hero-inner">
+    <span class="eyebrow" id="heroTag">Ferramenta gratuita e interativa</span>
+    <h1 id="heroTitle">Calculadora de <em>IMC</em></h1>
+    <p class="lede" id="heroLede">Arraste os controles abaixo e veja seu Índice de Massa Corporal em tempo real.</p>
+
+    <div class="calc-panel" id="calcPanel">
+      <div class="sliders">
+        <div class="slider-field">
+          <div class="slider-head">
+            <span class="slider-label">Peso</span>
+            <span class="slider-value"><span id="pesoVal">70</span><span class="unit">kg</span></span>
+          </div>
+          <input type="range" id="pesoRange" min="40" max="160" step="0.5" value="70">
+        </div>
+        <div class="slider-field">
+          <div class="slider-head">
+            <span class="slider-label">Altura</span>
+            <span class="slider-value"><span id="alturaVal">165</span><span class="unit">cm</span></span>
+          </div>
+          <input type="range" id="alturaRange" min="140" max="210" step="0.5" value="165">
+          <p class="healthy-range">Faixa de peso saudável pra essa altura: <strong id="healthyRange">—</strong></p>
+        </div>
+      </div>
+
+      <div class="gauge-col">
+        <svg class="gauge-svg" viewBox="0 0 300 175">
+          <path d="M20,150 A130,130 0 0 1 280,150" fill="none" stroke="rgba(255,255,255,.12)" stroke-width="10" stroke-linecap="round"/>
+          <defs>
+            <linearGradient id="gaugeGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#D4A054"/>
+              <stop offset="100%" stop-color="#B8511F"/>
+            </linearGradient>
+          </defs>
+          <path id="fillArc" d="M20,150 A130,130 0 0 1 280,150" fill="none" stroke="url(#gaugeGrad)" stroke-width="10" stroke-linecap="round"/>
+          <text class="gauge-tick" x="14" y="168">15</text>
+          <text class="gauge-tick" x="272" y="168">40</text>
+          <line id="needle" x1="150" y1="150" x2="150" y2="42" stroke="#FBF3E7" stroke-width="3" stroke-linecap="round"/>
+          <circle cx="150" cy="150" r="7" fill="#FBF3E7"/>
+        </svg>
+        <div class="gauge-result">
+          <div class="result-number" id="resultNumber">24.3</div>
+          <div class="result-category" id="resultCategory">Peso adequado</div>
+          <p class="result-note" id="resultNote">Sua relação peso/altura está dentro da faixa de referência da OMS.</p>
+        </div>
+      </div>
+    </div>
+
+    <p class="calc-disclaimer">O IMC é uma referência populacional simples — não avalia massa muscular, distribuição de gordura, idade ou sexo, e não é uma ferramenta de diagnóstico médico.</p>
+  </div>
+
+  <div class="scroll-hint"><span>Saiba mais</span><div class="line"></div></div>
+</section>
+
+<!-- ============ O QUE O IMC NÃO MOSTRA ============ -->
+<section class="light">
+  <div class="wrap">
+    <span class="eyebrow reveal">Contexto importa</span>
+    <h2 class="section-title reveal">O que o IMC <em>não</em> conta sobre você.</h2>
+    <p class="lede reveal">Ele é um bom ponto de partida, mas é só isso — um ponto de partida.</p>
+
+    <div class="limits-grid">
+      <div class="limit-card reveal">
+        <span class="limit-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 20V10M12 20V4M18 20v-7"/></svg></span>
+        <h4>Composição corporal</h4>
+        <p>O cálculo não diferencia massa muscular de gordura — pessoas mais musculosas podem ter IMC alto sem excesso de gordura.</p>
+      </div>
+      <div class="limit-card reveal reveal-delay-1">
+        <span class="limit-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 3v18M3 12h18"/></svg></span>
+        <h4>Distribuição de gordura</h4>
+        <p>Duas pessoas com o mesmo IMC podem ter riscos de saúde diferentes, dependendo de onde a gordura está concentrada.</p>
+      </div>
+      <div class="limit-card reveal reveal-delay-2">
+        <span class="limit-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M4.9 4.9l2.8 2.8M16.3 16.3l2.8 2.8M2 12h4M18 12h4M4.9 19.1l2.8-2.8M16.3 7.7l2.8-2.8"/></svg></span>
+        <h4>Idade, sexo e histórico</h4>
+        <p>Fatores individuais mudam a leitura do número. Por isso ele nunca deve ser o único critério pra decisões sobre sua saúde.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ BRIDGE PARA O CURSO ============ -->
+<section class="dark bridge">
+  <div class="wrap">
+    <span class="eyebrow reveal" style="justify-content:center;">Além do número</span>
+    <h2 class="section-title reveal">Um número não conta <em>sua história.</em></h2>
+    <p class="lede reveal" style="margin:0 auto;">Se o que você quer é um plano estruturado — com acompanhamento real, não só um resultado isolado — o Projeto 90 Dias foi feito pra isso.</p>
+    <a href="index.html#oferta" class="btn-primary reveal">Conhecer o Projeto 90 Dias →</a>
+  </div>
+</section>
+
+<!-- ============ FAQ ============ -->
+<section class="light">
+  <div class="wrap" style="text-align:center;">
+    <span class="eyebrow reveal" style="justify-content:center;">Perguntas frequentes</span>
+    <h2 class="section-title reveal">Sobre o <em>IMC.</em></h2>
+    <div class="faq-list">
+      <div class="faq-item">
+        <button class="faq-q">O que é IMC? <span class="plus">+</span></button>
+        <div class="faq-a"><p>IMC (Índice de Massa Corporal) é uma medida que relaciona peso e altura, usada como referência populacional para triagem de faixas de peso.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">Como calcular o IMC manualmente? <span class="plus">+</span></button>
+        <div class="faq-a"><p>Divida seu peso em quilogramas pelo quadrado da sua altura em metros: IMC = peso ÷ (altura × altura). Por exemplo, 70kg e 1,65m resultam em 70 ÷ (1,65×1,65) ≈ 25,7.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">IMC alto significa que estou com sobrepeso? <span class="plus">+</span></button>
+        <div class="faq-a"><p>É um indicativo, não uma certeza. O IMC não diferencia massa muscular de gordura corporal, então atletas e pessoas com mais massa magra podem ter IMC elevado sem excesso de gordura.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">Qual o IMC considerado ideal? <span class="plus">+</span></button>
+        <div class="faq-a"><p>Segundo a Organização Mundial da Saúde, a faixa de 18,5 a 24,9 é classificada como peso adequado para a maioria dos adultos — mas fatores individuais sempre devem ser considerados junto com um profissional de saúde.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="dark">
+  <div class="wrap">
+    <div class="foot-bottom">
+      <p>Esta calculadora tem fins educativos e não substitui avaliação de um profissional de saúde.</p>
+      <span class="foot-legal">© 2026 FAST90. Todos os direitos reservados.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+const header = document.getElementById('siteHeader');
+window.addEventListener('scroll', () => { header.classList.toggle('scrolled', window.scrollY > 40); }, { passive:true });
+
+const revealEls = document.querySelectorAll('.reveal');
+const io = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+}, { threshold:.15, rootMargin:'0px 0px -60px 0px' });
+revealEls.forEach(el => io.observe(el));
+
+document.querySelectorAll('.faq-item').forEach(item => {
+  const q = item.querySelector('.faq-q');
+  const a = item.querySelector('.faq-a');
+  q.addEventListener('click', () => {
+    const isOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item.open').forEach(o => { o.classList.remove('open'); o.querySelector('.faq-a').style.maxHeight = null; });
+    if(!isOpen){ item.classList.add('open'); a.style.maxHeight = a.scrollHeight + 'px'; }
+  });
+});
+
+/* ============ HERO ENTRANCE ANIMATION ============ */
+window.addEventListener('DOMContentLoaded', () => {
+  [['heroTag',0],['heroTitle',80],['heroLede',160],['calcPanel',260]].forEach(([id,delay])=>{
+    const el = document.getElementById(id);
+    el.style.opacity = 0; el.style.transform = 'translateY(24px)';
+    el.style.transition = 'opacity .8s cubic-bezier(.22,.61,.36,1), transform .8s cubic-bezier(.22,.61,.36,1)';
+    setTimeout(()=>{ el.style.opacity = 1; el.style.transform = 'translateY(0)'; }, delay + 80);
+  });
+});
+
+/* ============ PARTICLE BACKGROUND ============ */
+const canvas = document.getElementById('particleCanvas');
+const ctx = canvas.getContext('2d');
+let particles = [];
+function resizeCanvas(){ canvas.width = canvas.offsetWidth * devicePixelRatio; canvas.height = canvas.offsetHeight * devicePixelRatio; }
+function initParticles(){
+  particles = Array.from({length:60}, () => ({
+    x: Math.random()*canvas.width, y: Math.random()*canvas.height,
+    r: (Math.random()*1.8+.4) * devicePixelRatio,
+    vy: -(Math.random()*.22+.05) * devicePixelRatio, vx: (Math.random()-.5)*.1 * devicePixelRatio,
+    o: Math.random()*.5+.15
+  }));
+}
+function drawParticles(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  particles.forEach(p=>{
+    p.y += p.vy; p.x += p.vx;
+    if(p.y < -10) p.y = canvas.height+10;
+    ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+    ctx.fillStyle = `rgba(212,160,84,${p.o})`; ctx.fill();
+  });
+  requestAnimationFrame(drawParticles);
+}
+resizeCanvas(); initParticles(); drawParticles();
+window.addEventListener('resize', () => { resizeCanvas(); initParticles(); });
+
+/* ============ CALCULADORA INTERATIVA (tempo real) ============ */
+const pesoRange = document.getElementById('pesoRange');
+const alturaRange = document.getElementById('alturaRange');
+const pesoVal = document.getElementById('pesoVal');
+const alturaVal = document.getElementById('alturaVal');
+const resultNumber = document.getElementById('resultNumber');
+const resultCategory = document.getElementById('resultCategory');
+const resultNote = document.getElementById('resultNote');
+const healthyRange = document.getElementById('healthyRange');
+const needle = document.getElementById('needle');
+const fillArc = document.getElementById('fillArc');
+
+const categorias = [
+  { max:18.5, label:'Abaixo do peso', note:'Vale conversar com um profissional de saúde sobre isso, se fizer sentido pra você.' },
+  { max:25,   label:'Peso adequado', note:'Sua relação peso/altura está dentro da faixa de referência da OMS.' },
+  { max:30,   label:'Sobrepeso', note:'Um pouco acima da faixa de referência — não define sua saúde sozinho.' },
+  { max:35,   label:'Obesidade grau I', note:'Vale buscar acompanhamento profissional pra entender o melhor caminho.' },
+  { max:40,   label:'Obesidade grau II', note:'Acompanhamento médico e nutricional ajuda a orientar os próximos passos.' },
+  { max:Infinity, label:'Obesidade grau III', note:'Acompanhamento médico próximo ajuda a orientar os próximos passos com segurança.' }
+];
+
+const arcLen = fillArc.getTotalLength();
+fillArc.style.strokeDasharray = arcLen;
+
+function updateSliderTrackBg(input){
+  const min = +input.min, max = +input.max, val = +input.value;
+  const pct = ((val - min) / (max - min)) * 100;
+  input.style.background = `linear-gradient(to right, var(--gold) ${pct}%, rgba(255,255,255,.14) ${pct}%)`;
+}
+
+function calcular(){
+  const peso = +pesoRange.value;
+  const alturaCm = +alturaRange.value;
+  const alturaM = alturaCm / 100;
+  const imc = peso / (alturaM * alturaM);
+  const cat = categorias.find(c => imc < c.max);
+
+  pesoVal.textContent = peso.toFixed(1).replace('.0','');
+  alturaVal.textContent = alturaCm.toFixed(1).replace('.0','');
+  resultNumber.textContent = imc.toFixed(1);
+  resultCategory.textContent = cat.label;
+  resultNote.textContent = cat.note;
+
+  const min = alturaM*alturaM*18.5, max = alturaM*alturaM*24.9;
+  healthyRange.textContent = `${min.toFixed(0)}–${max.toFixed(0)} kg`;
+
+  const t = Math.min(Math.max((imc - 15) / (40 - 15), 0), 1);
+  const angle = -90 + t * 180;
+  needle.style.transform = `rotate(${angle}deg)`;
+  fillArc.style.strokeDashoffset = arcLen * (1 - t);
+
+  updateSliderTrackBg(pesoRange);
+  updateSliderTrackBg(alturaRange);
+}
+
+pesoRange.addEventListener('input', calcular);
+alturaRange.addEventListener('input', calcular);
+calcular();
+</script>
+</body>
+</html>
