@@ -50,18 +50,52 @@ async function getAccessToken() {
 }
 
 async function fetchItemPrice(itemId, accessToken) {
-  const url = `https://api.mercadolibre.com/items/${itemId}?attributes=id,price,original_price,available_quantity,status,permalink`;
-  const res = await fetch(url, {
+  // 1) Tenta primeiro como ID de anúncio (item) — caso mais comum.
+  const itemRes = await fetch(
+    `https://api.mercadolibre.com/items/${itemId}?attributes=id,price,original_price,available_quantity,status,permalink`,
+    { headers: { Authorization: `Bearer ${accessToken}` } }
+  );
+
+  if (itemRes.ok) {
+    const item = await itemRes.json();
+    return buildResult(itemId, item);
+  }
+
+  // 2) Se não for um item válido, pode ser um ID de página de CATÁLOGO
+  // (ex: URLs com "/p/MLB..."). Nesse caso, buscamos o produto e pegamos
+  // o preço de quem está ganhando o "buy box" (a oferta em destaque).
+  const productRes = await fetch(`https://api.mercadolibre.com/products/${itemId}`, {
     headers: { Authorization: `Bearer ${accessToken}` },
   });
 
-  if (!res.ok) {
-    return { id: itemId, error: true, status: res.status };
+  if (!productRes.ok) {
+    return { id: itemId, error: true, status: itemRes.status };
   }
 
-  const item = await res.json();
+  const product = await productRes.json();
+  const winnerId =
+    (product?.buy_box_winner && (product.buy_box_winner.item_id || product.buy_box_winner)) || null;
+
+  if (!winnerId) {
+    return { id: itemId, error: true, status: 404 };
+  }
+
+  const winnerRes = await fetch(
+    `https://api.mercadolibre.com/items/${winnerId}?attributes=id,price,original_price,available_quantity,status,permalink`,
+    { headers: { Authorization: `Bearer ${accessToken}` } }
+  );
+
+  if (!winnerRes.ok) {
+    return { id: itemId, error: true, status: winnerRes.status };
+  }
+
+  const winnerItem = await winnerRes.json();
+  return buildResult(itemId, winnerItem);
+}
+
+function buildResult(requestedId, item) {
   return {
-    id: itemId,
+    id: requestedId,
     price: typeof item.price === 'number' ? item.price : null,
     original_price: typeof item.original_price === 'number' ? item.original_price : null,
     available: item.status === 'active' && (item.available_quantity ?? 0) > 0,
