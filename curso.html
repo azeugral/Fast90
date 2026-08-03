@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Projeto 90 Dias — Transforme Seu Corpo e Recupere Sua Confiança | FAST90</title>
+<meta name="description" content="Projeto 90 Dias: um método estruturado em 3 fases para emagrecer com consistência, sem dietas extremas, e recuperar sua confiança.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --ink:        #142420;
+    --ink-soft:   #1E332D;
+    --cream:      #F5F1E7;
+    --cream-soft: #ECE4D3;
+    --coral:      #E8543E;
+    --coral-light:#F2775F;
+    --leaf:       #7FA65C;
+    --gold:       #D9A441;
+    --stone:      #A79E8E;
+    --stone-dark: #6B6355;
+
+    --serif: 'Instrument Serif', Georgia, serif;
+    --sans:  'Manrope', -apple-system, sans-serif;
+    --mono:  'Space Grotesk', monospace;
+    --container: 1180px;
+    --ease: cubic-bezier(.22,.61,.36,1);
+  }
+  *{ margin:0; padding:0; box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+  @media (prefers-reduced-motion: reduce){
+    html{ scroll-behavior:auto; }
+    *{ animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important; }
+  }
+  body{ font-family:var(--sans); background:var(--cream); color:var(--ink); -webkit-font-smoothing:antialiased; overflow-x:hidden; }
+  img{ max-width:100%; display:block; }
+  a{ color:inherit; text-decoration:none; }
+  button{ font-family:inherit; cursor:pointer; border:none; background:none; }
+  ul{ list-style:none; }
+  .wrap{ max-width:var(--container); margin:0 auto; padding:0 32px; }
+
+  .eyebrow{ font-family:var(--mono); font-size:12px; letter-spacing:.18em; text-transform:uppercase; color:var(--coral); font-weight:600; display:inline-flex; align-items:center; gap:10px; }
+  .eyebrow::before{ content:''; width:24px; height:1px; background:var(--coral); display:inline-block; }
+  .dark .eyebrow{ color:var(--gold); } .dark .eyebrow::before{ background:var(--gold); }
+
+  h1,h2,h3{ font-family:var(--serif); font-weight:400; line-height:1.05; letter-spacing:-.01em; }
+  .section-title{ font-size:clamp(32px,4.2vw,52px); margin:18px 0 20px; }
+  .section-title em{ font-style:italic; color:var(--coral); }
+  .lede{ font-size:18px; line-height:1.7; color:var(--stone-dark); max-width:560px; }
+  .dark .lede{ color:#CFE0D5; }
+
+  section{ position:relative; padding:120px 0; }
+  @media (max-width:768px){ section{ padding:80px 0; } }
+  .dark{ background:var(--ink); color:var(--cream); }
+  .light{ background:var(--cream); color:var(--ink); }
+
+  .reveal{ opacity:0; transform:translateY(28px); transition:opacity .9s var(--ease), transform .9s var(--ease); }
+  .reveal.in{ opacity:1; transform:translateY(0); }
+  .reveal-delay-1{ transition-delay:.1s; } .reveal-delay-2{ transition-delay:.2s; } .reveal-delay-3{ transition-delay:.3s; }
+
+  /* ============ NAV ============ */
+  header{ position:fixed; top:0; left:0; right:0; z-index:900; padding:22px 0; transition:background .4s, padding .4s, border-color .4s; border-bottom:1px solid transparent; }
+  header.scrolled{ background:rgba(20,36,32,.88); backdrop-filter:blur(10px); padding:14px 0; border-color:rgba(255,255,255,.08); }
+  nav{ display:flex; align-items:center; justify-content:space-between; gap:24px; }
+  .logo{ font-family:var(--serif); font-size:22px; color:var(--cream); flex-shrink:0; }
+  .logo span{ color:var(--coral-light); font-style:italic; }
+  .nav-links{ display:flex; gap:32px; align-items:center; margin-left:auto; margin-right:24px; }
+  .nav-links a{ font-size:14px; color:var(--cream); opacity:.72; transition:opacity .25s; }
+  .nav-links a:hover{ opacity:1; }
+  .nav-links a.active{ opacity:1; color:var(--gold); }
+  .nav-cta{
+    font-family:var(--mono); font-size:12px; letter-spacing:.06em; text-transform:uppercase;
+    background:var(--coral); color:var(--cream); padding:11px 22px; border-radius:2px; flex-shrink:0;
+    transition:background .25s, transform .25s;
+  }
+  .nav-cta:hover{ background:var(--coral-light); transform:translateY(-1px); }
+  .menu-toggle{ display:none; flex-direction:column; gap:5px; flex-shrink:0; }
+  .menu-toggle span{ width:24px; height:2px; background:var(--cream); }
+  @media (max-width:900px){ .nav-links{ display:none; } .menu-toggle{ display:flex; } }
+
+  /* ============ HERO ============ */
+  .hero{ position:relative; min-height:80vh; display:flex; align-items:flex-end; background:var(--ink); color:var(--cream); overflow:hidden; padding-bottom:100px; }
+  .hero-media{ position:absolute; inset:0; z-index:0; }
+  #particleCanvas{ position:absolute; inset:0; width:100%; height:100%; opacity:.55; }
+  .hero-video{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:0; transition:opacity 1.4s ease; z-index:1; }
+  .hero-media::after{ content:''; position:absolute; inset:0; z-index:2; background:linear-gradient(180deg, rgba(20,36,32,.35) 0%, rgba(20,36,32,.55) 55%, var(--ink) 100%); }
+  .hero-content{ position:relative; z-index:3; width:100%; }
+  .hero h1{ font-size:clamp(42px,6.4vw,86px); max-width:920px; margin:22px 0 26px; }
+  .hero h1 em{ font-style:italic; color:var(--coral-light); }
+  .hero-sub{ font-size:19px; max-width:520px; color:#DDE9DF; line-height:1.7; margin-bottom:40px; }
+  .hero-actions{ display:flex; align-items:center; gap:28px; flex-wrap:wrap; }
+
+  .btn-primary{
+    font-family:var(--mono); font-size:13px; letter-spacing:.08em; text-transform:uppercase;
+    background:var(--coral); color:var(--cream); padding:18px 34px; border-radius:2px;
+    display:inline-flex; align-items:center; gap:10px;
+    transition:background .25s var(--ease), transform .25s var(--ease), box-shadow .25s;
+  }
+  .btn-primary:hover{ background:var(--coral-light); transform:translateY(-2px); box-shadow:0 14px 30px -10px rgba(232,84,62,.5); }
+  .btn-ghost-link{ font-size:14px; color:var(--cream); opacity:.75; display:inline-flex; align-items:center; gap:8px; transition:opacity .25s; }
+  .btn-ghost-link:hover{ opacity:1; }
+  .btn-ghost-link svg{ transition:transform .25s; }
+  .btn-ghost-link:hover svg{ transform:translateY(3px); }
+
+  .scroll-cue{ position:absolute; bottom:36px; left:32px; z-index:3; display:flex; align-items:center; gap:10px; font-family:var(--mono); font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:#B9C9BC; }
+  .scroll-cue .line{ width:1px; height:34px; background:#B9C9BC; position:relative; overflow:hidden; }
+  .scroll-cue .line::after{ content:''; position:absolute; top:-100%; left:0; width:100%; height:100%; background:var(--gold); animation:scrollline 1.8s infinite ease-in-out; }
+  @keyframes scrollline{ 50%{ top:100%; } 100%{ top:100%; } }
+
+  /* ============ PONTO DE VIRADA ============ */
+  .turn{ padding-top:130px; }
+  .turn .wrap{ display:grid; grid-template-columns:.9fr 1.1fr; gap:70px; align-items:start; }
+  .turn-quote{ font-family:var(--serif); font-size:clamp(26px,3vw,36px); line-height:1.35; }
+  .turn-quote em{ font-style:italic; color:var(--gold); }
+  .turn-list{ display:flex; flex-direction:column; gap:26px; margin-top:8px; }
+  .turn-item{ display:flex; gap:18px; padding-bottom:26px; border-bottom:1px solid rgba(255,255,255,.1); }
+  .turn-item:last-child{ border-bottom:none; }
+  .turn-num{ font-family:var(--mono); font-size:13px; color:var(--gold); opacity:.7; padding-top:3px; }
+  .turn-item p{ color:#CFE0D5; line-height:1.7; font-size:15.5px; }
+  @media (max-width:860px){ .turn .wrap{ grid-template-columns:1fr; gap:36px; } }
+
+  /* ============ MÉTODO ============ */
+  .method-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:0; margin-top:70px; border-top:1px solid #E2D8C4; }
+  .method-card{ padding:44px 36px; border-right:1px solid #E2D8C4; border-bottom:1px solid #E2D8C4; transition:background .3s; }
+  .method-card:last-child{ border-right:none; }
+  .method-card:hover{ background:#F2EADA; }
+  .method-phase{ font-family:var(--mono); font-size:12px; letter-spacing:.1em; color:var(--coral); text-transform:uppercase; }
+  .method-days{ font-family:var(--mono); font-size:12px; color:var(--stone); margin-top:6px; }
+  .method-card h3{ font-family:var(--serif); font-size:28px; margin:18px 0 14px; }
+  .method-card p{ color:var(--stone-dark); line-height:1.7; font-size:15px; }
+  @media (max-width:860px){ .method-grid{ grid-template-columns:1fr; } .method-card{ border-right:none; } }
+
+  /* ============ PROVA SOCIAL ============ */
+  .testi-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:24px; margin-top:64px; }
+  .testi-card{ background:var(--ink-soft); border:1px solid rgba(255,255,255,.08); border-radius:2px; padding:34px 30px; display:flex; flex-direction:column; gap:20px; }
+  .testi-stars{ color:var(--gold); font-size:14px; letter-spacing:2px; }
+  .testi-card p{ font-size:15.5px; line-height:1.75; color:#DDE9DF; }
+  .testi-who{ display:flex; align-items:center; gap:12px; margin-top:auto; }
+  .testi-avatar{ width:42px; height:42px; border-radius:50%; background:linear-gradient(135deg,var(--coral),var(--gold)); flex-shrink:0; }
+  .testi-name{ font-size:14px; font-weight:600; }
+  .testi-meta{ font-size:12.5px; color:var(--stone); font-family:var(--mono); }
+  @media (max-width:860px){ .testi-grid{ grid-template-columns:1fr; } }
+
+  /* ============ INCLUSO ============ */
+  .incl-wrap{ display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:center; margin-top:60px; }
+  .incl-list li{ display:flex; gap:16px; padding:18px 0; border-bottom:1px solid #E2D8C4; align-items:flex-start; }
+  .incl-list li:first-child{ padding-top:0; }
+  .check{ width:22px; height:22px; border-radius:50%; background:var(--leaf); flex-shrink:0; display:flex; align-items:center; justify-content:center; margin-top:2px; }
+  .check svg{ width:11px; height:11px; }
+  .incl-list h4{ font-size:16.5px; font-weight:700; margin-bottom:4px; }
+  .incl-list p{ font-size:14.5px; color:var(--stone-dark); line-height:1.6; }
+  .incl-visual{ aspect-ratio:4/5; background:linear-gradient(160deg,var(--coral) 0%, #A63E2C 60%, var(--ink) 100%); border-radius:2px; position:relative; overflow:hidden; }
+  .incl-visual::before{ content:'90'; position:absolute; font-family:var(--serif); font-size:280px; color:rgba(255,255,255,.08); right:-30px; bottom:-60px; line-height:1; font-style:italic; }
+  .incl-visual-label{ position:absolute; bottom:28px; left:28px; color:var(--cream); }
+  .incl-visual-label .eyebrow{ color:var(--gold); }
+  .incl-visual-label .eyebrow::before{ background:var(--gold); }
+  .incl-visual-label p{ font-family:var(--serif); font-size:22px; margin-top:10px; max-width:230px; }
+  @media (max-width:860px){ .incl-wrap{ grid-template-columns:1fr; gap:40px; } .incl-visual{ order:-1; aspect-ratio:16/10; } }
+
+  /* ============ OFERTA ============ */
+  .offer-card{ max-width:640px; margin:64px auto 0; background:var(--ink-soft); border:1px solid rgba(217,164,65,.35); border-radius:2px; padding:52px 48px; position:relative; }
+  .offer-badge{ position:absolute; top:-14px; left:48px; background:var(--gold); color:var(--ink); font-family:var(--mono); font-size:11px; letter-spacing:.1em; text-transform:uppercase; padding:7px 16px; border-radius:2px; font-weight:600; }
+  .offer-name{ font-family:var(--serif); font-size:30px; margin-bottom:6px; }
+  .offer-desc{ color:var(--stone); font-size:14.5px; margin-bottom:30px; }
+  .offer-price-row{ display:flex; align-items:baseline; gap:14px; margin-bottom:6px; }
+  .offer-old{ font-size:16px; color:var(--stone); text-decoration:line-through; }
+  .offer-new{ font-family:var(--serif); font-size:52px; color:var(--cream); }
+  .offer-new sup{ font-size:22px; top:-1.4em; }
+  .offer-install{ font-size:13.5px; color:var(--stone); margin-bottom:34px; font-family:var(--mono); }
+  .offer-bonus{ display:flex; flex-direction:column; gap:14px; margin-bottom:36px; }
+  .offer-bonus li{ display:flex; gap:12px; font-size:14.5px; color:#DDE9DF; align-items:flex-start; }
+  .offer-bonus svg{ flex-shrink:0; margin-top:3px; color:var(--gold); width:15px; height:15px; }
+  .offer-cta{ display:block; text-align:center; width:100%; padding:20px; font-size:14px; }
+  .offer-guarantee{ display:flex; align-items:center; gap:12px; margin-top:24px; justify-content:center; font-size:12.5px; color:var(--stone); }
+
+  /* ============ FAQ ============ */
+  .faq-list{ max-width:760px; margin:56px auto 0; }
+  .faq-item{ border-bottom:1px solid #E2D8C4; }
+  .faq-q{ width:100%; display:flex; justify-content:space-between; align-items:center; padding:26px 4px; font-size:16.5px; font-weight:600; text-align:left; background:none; }
+  .faq-q .plus{ font-family:var(--mono); font-size:20px; color:var(--coral); transition:transform .3s var(--ease); flex-shrink:0; margin-left:20px; }
+  .faq-item.open .plus{ transform:rotate(45deg); }
+  .faq-a{ max-height:0; overflow:hidden; transition:max-height .4s var(--ease); }
+  .faq-a p{ padding:0 4px 26px; color:var(--stone-dark); line-height:1.7; font-size:15px; max-width:640px; }
+
+  footer{ padding:70px 0 34px; }
+  .foot-top{ display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:40px; padding-bottom:50px; border-bottom:1px solid rgba(255,255,255,.1); }
+  .foot-brand .logo{ margin-bottom:14px; }
+  .foot-brand p{ color:var(--stone); font-size:14px; max-width:280px; line-height:1.7; }
+  .foot-cols{ display:flex; gap:70px; }
+  .foot-col h5{ font-family:var(--mono); font-size:11.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--gold); margin-bottom:18px; }
+  .foot-col a, .foot-col p{ display:block; font-size:14px; color:#CFE0D5; margin-bottom:12px; }
+  .foot-bottom{ display:flex; justify-content:space-between; align-items:center; padding-top:26px; flex-wrap:wrap; gap:14px; }
+  .foot-bottom p{ font-size:12.5px; color:var(--stone); max-width:640px; line-height:1.6; }
+  .foot-legal{ font-size:12px; color:#5C5648; }
+
+  ::selection{ background:var(--coral); color:var(--cream); }
+</style>
+</head>
+<body>
+
+<header id="siteHeader">
+  <div class="wrap">
+    <nav>
+      <a href="index.html" class="logo">FAST<span>90</span></a>
+      <div class="nav-links">
+        <a href="index.html">Início</a>
+        <a href="produtos.html">Outlet</a>
+        <a href="imc.html">Calculadora IMC</a>
+        <a href="curso.html" class="active">Curso</a>
+      </div>
+      <a href="#oferta" class="nav-cta">Quero começar</a>
+      <button class="menu-toggle" id="menuToggle" aria-label="Abrir menu"><span></span><span></span><span></span></button>
+    </nav>
+  </div>
+</header>
+
+<!-- ============ HERO ============ -->
+<section class="hero" id="top">
+  <div class="hero-media">
+    <canvas id="particleCanvas"></canvas>
+    <video class="hero-video" id="heroVideo" autoplay muted loop playsinline>
+      <source src="Backgroud-Course.mp4" type="video/mp4">
+    </video>
+  </div>
+  <div class="wrap hero-content">
+    <span class="eyebrow">Projeto 90 dias</span>
+    <h1>Transforme seu corpo e <em>recupere</em> sua confiança.</h1>
+    <p class="hero-sub">Um método estruturado em três fases para emagrecer de forma consistente, sem dietas malucas e sem promessas vazias — no seu ritmo, com acompanhamento real.</p>
+    <div class="hero-actions">
+      <a href="#oferta" class="btn-primary">Quero minha vaga →</a>
+      <a href="#metodo" class="btn-ghost-link">Conhecer o método
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+      </a>
+    </div>
+  </div>
+  <div class="scroll-cue"><span>Role</span><div class="line"></div></div>
+</section>
+
+<!-- ============ PONTO DE VIRADA ============ -->
+<section class="turn dark">
+  <div class="wrap">
+    <p class="turn-quote reveal">Você já tentou de tudo — e continua se sentindo <em>presa no mesmo lugar</em>. O problema nunca foi força de vontade.</p>
+    <div class="turn-list">
+      <div class="turn-item reveal reveal-delay-1"><span class="turn-num">01</span><p>Dietas restritivas que funcionam por duas semanas e depois viram frustração.</p></div>
+      <div class="turn-item reveal reveal-delay-2"><span class="turn-num">02</span><p>Treinos genéricos, sem progressão, que não respeitam seu corpo nem sua rotina.</p></div>
+      <div class="turn-item reveal reveal-delay-3"><span class="turn-num">03</span><p>Nenhum acompanhamento real — só um PDF e o silêncio depois da compra.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MÉTODO ============ -->
+<section class="light" id="metodo">
+  <div class="wrap">
+    <span class="eyebrow reveal">O método</span>
+    <h2 class="section-title reveal">Três fases. <em>Noventa dias.</em><br>Um caminho que faz sentido.</h2>
+    <p class="lede reveal">Cada fase existe por um motivo — não é conteúdo solto, é uma progressão pensada para o seu corpo se adaptar sem sofrimento.</p>
+    <div class="method-grid">
+      <div class="method-card reveal">
+        <span class="method-phase">Fase 01 — Fundação</span><span class="method-days">Dias 1–30</span>
+        <h3>Reprogramar</h3><p>Hábitos alimentares sustentáveis, organização de rotina e as bases de movimento — sem restrição extrema, sem choque.</p>
+      </div>
+      <div class="method-card reveal reveal-delay-1">
+        <span class="method-phase">Fase 02 — Aceleração</span><span class="method-days">Dias 31–60</span>
+        <h3>Consistência</h3><p>Treinos progressivos e ajustes finos no plano alimentar conforme seu corpo responde. Aqui os resultados começam a aparecer.</p>
+      </div>
+      <div class="method-card reveal reveal-delay-2">
+        <span class="method-phase">Fase 03 — Consolidação</span><span class="method-days">Dias 61–90</span>
+        <h3>Autonomia</h3><p>Resultado visível, autoestima reconstruída e um plano de manutenção para você seguir sozinha depois do programa.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PROVA SOCIAL ============ -->
+<section class="dark" id="resultados">
+  <div class="wrap">
+    <span class="eyebrow reveal">Quem já viveu o projeto</span>
+    <h2 class="section-title reveal">Histórias reais, <em>ritmos diferentes.</em></h2>
+    <div class="testi-grid">
+      <div class="testi-card reveal">
+        <span class="testi-stars">★★★★★</span>
+        <p>"[Substituir — depoimento real da aluna, incluindo o que mudou na rotina e na confiança dela ao longo dos 90 dias.]"</p>
+        <div class="testi-who"><div class="testi-avatar"></div><div><div class="testi-name">[Nome da aluna]</div><div class="testi-meta">Turma [mês/ano]</div></div></div>
+      </div>
+      <div class="testi-card reveal reveal-delay-1">
+        <span class="testi-stars">★★★★★</span>
+        <p>"[Substituir — depoimento real, foco em como o acompanhamento fez diferença comparado a tentativas anteriores.]"</p>
+        <div class="testi-who"><div class="testi-avatar"></div><div><div class="testi-name">[Nome da aluna]</div><div class="testi-meta">Turma [mês/ano]</div></div></div>
+      </div>
+      <div class="testi-card reveal reveal-delay-2">
+        <span class="testi-stars">★★★★★</span>
+        <p>"[Substituir — depoimento real, foco em resultado emocional/autoestima, não só estético.]"</p>
+        <div class="testi-who"><div class="testi-avatar"></div><div><div class="testi-name">[Nome da aluna]</div><div class="testi-meta">Turma [mês/ano]</div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ O QUE ESTÁ INCLUSO ============ -->
+<section class="light">
+  <div class="wrap">
+    <span class="eyebrow reveal">O que você recebe</span>
+    <h2 class="section-title reveal">Tudo o que você precisa <em>num só lugar.</em></h2>
+    <div class="incl-wrap">
+      <ul class="incl-list">
+        <li class="reveal"><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg></span><div><h4>Aulas em vídeo, fase por fase</h4><p>Módulos liberados conforme sua evolução, no ritmo das 3 fases do método.</p></div></li>
+        <li class="reveal reveal-delay-1"><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg></span><div><h4>Plano alimentar flexível</h4><p>Estrutura adaptável à sua rotina — pensado com orientação nutricional, não uma dieta genérica.</p></div></li>
+        <li class="reveal reveal-delay-2"><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg></span><div><h4>Treinos guiados</h4><p>Vídeos com progressão de carga e intensidade — pode ser feito em casa ou na academia.</p></div></li>
+        <li class="reveal reveal-delay-3"><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg></span><div><h4>Comunidade + acompanhamento</h4><p>Grupo exclusivo de alunas e check-ins ao longo do programa para ajustar o que for preciso.</p></div></li>
+      </ul>
+      <div class="incl-visual reveal">
+        <div class="incl-visual-label"><span class="eyebrow">Bônus incluso</span><p>Guia de manutenção pós-90 dias, para você não voltar ao ponto de partida.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ OFERTA ============ -->
+<section class="dark" id="oferta">
+  <div class="wrap" style="text-align:center;">
+    <span class="eyebrow reveal" style="justify-content:center;">Vagas para a próxima turma</span>
+    <h2 class="section-title reveal">Comece seu <em>Projeto 90 Dias</em> hoje.</h2>
+    <p class="lede reveal" style="margin:0 auto;">Vagas limitadas para garantir acompanhamento de qualidade a todas as alunas.</p>
+    <div class="offer-card reveal">
+      <span class="offer-badge">Acesso completo</span>
+      <div class="offer-name">Projeto 90 Dias</div>
+      <p class="offer-desc">Curso completo + comunidade + bônus de manutenção</p>
+      <div class="offer-price-row"><span class="offer-old">R$ 000</span><span class="offer-new"><sup>R$</sup> 000</span></div>
+      <div class="offer-install">ou 12x de R$ 00,00 no cartão</div>
+      <ul class="offer-bonus">
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7"/></svg> Acesso imediato às 3 fases do método</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7"/></svg> Bônus: guia de manutenção pós-programa</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7"/></svg> Comunidade exclusiva de alunas</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7"/></svg> 7 dias de garantia incondicional</li>
+      </ul>
+      <a href="https://pay.hotmart.com/SEU-CODIGO-AQUI" class="btn-primary offer-cta" target="_blank" rel="noopener">Garantir minha vaga agora</a>
+      <div class="offer-guarantee">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--leaf)" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+        Compra 100% segura via Hotmart
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FAQ ============ -->
+<section class="light">
+  <div class="wrap" style="text-align:center;">
+    <span class="eyebrow reveal" style="justify-content:center;">Dúvidas frequentes</span>
+    <h2 class="section-title reveal">Antes de <em>começar.</em></h2>
+    <div class="faq-list">
+      <div class="faq-item"><button class="faq-q">O método funciona para qualquer idade adulta? <span class="plus">+</span></button><div class="faq-a"><p>Sim. O plano é adaptado ao seu ponto de partida e ao seu ritmo — não existe um padrão único imposto a todas as alunas.</p></div></div>
+      <div class="faq-item"><button class="faq-q">Preciso de equipamento ou academia? <span class="plus">+</span></button><div class="faq-a"><p>Não é obrigatório. Os treinos têm versões para casa e para academia, então você escolhe o que se encaixa na sua rotina.</p></div></div>
+      <div class="faq-item"><button class="faq-q">Por quanto tempo tenho acesso ao conteúdo? <span class="plus">+</span></button><div class="faq-a"><p>[Substituir — definir período de acesso, ex: acesso vitalício ou por X meses após a compra.]</p></div></div>
+      <div class="faq-item"><button class="faq-q">E se eu não me adaptar ao programa? <span class="plus">+</span></button><div class="faq-a"><p>Você tem 7 dias de garantia incondicional a partir da compra. Se não for pra você, devolvemos 100% do valor.</p></div></div>
+      <div class="faq-item"><button class="faq-q">Como recebo o acesso após a compra? <span class="plus">+</span></button><div class="faq-a"><p>Assim que o pagamento é confirmado pela Hotmart, você recebe o acesso por e-mail em poucos minutos.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<footer class="dark">
+  <div class="wrap">
+    <div class="foot-top">
+      <div class="foot-brand">
+        <a href="index.html" class="logo">FAST<span>90</span></a>
+        <p>Método estruturado de transformação corporal em 90 dias, com acompanhamento real do primeiro ao último dia.</p>
+      </div>
+      <div class="foot-cols">
+        <div class="foot-col"><h5>Navegação</h5><a href="index.html">Início</a><a href="produtos.html">Outlet</a><a href="imc.html">Calculadora IMC</a></div>
+        <div class="foot-col"><h5>Contato</h5><a href="mailto:contato@fast90.com.br">contato@fast90.com.br</a><a href="#">@fast90.oficial</a></div>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <p>Resultados individuais podem variar de pessoa para pessoa. Este produto não substitui acompanhamento médico ou nutricional profissional — consulte um especialista antes de iniciar qualquer programa de emagrecimento.</p>
+      <span class="foot-legal">© 2026 FAST90. Todos os direitos reservados.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+const header = document.getElementById('siteHeader');
+window.addEventListener('scroll', () => { header.classList.toggle('scrolled', window.scrollY > 40); }, { passive:true });
+
+const revealEls = document.querySelectorAll('.reveal');
+const io = new IntersectionObserver((entries) => { entries.forEach(e => { if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } }); }, { threshold:.15, rootMargin:'0px 0px -60px 0px' });
+revealEls.forEach(el => io.observe(el));
+
+const heroVideo = document.getElementById('heroVideo');
+heroVideo.addEventListener('loadeddata', () => { heroVideo.style.opacity = 1; });
+heroVideo.addEventListener('error', () => { heroVideo.style.display = 'none'; });
+
+const canvas = document.getElementById('particleCanvas');
+const ctx = canvas.getContext('2d');
+let particles = [];
+function resizeCanvas(){ canvas.width = canvas.offsetWidth * devicePixelRatio; canvas.height = canvas.offsetHeight * devicePixelRatio; }
+function initParticles(){
+  particles = Array.from({length:70}, () => ({ x: Math.random()*canvas.width, y: Math.random()*canvas.height, r: (Math.random()*1.8+.4) * devicePixelRatio, vy: -(Math.random()*.25+.05) * devicePixelRatio, vx: (Math.random()-.5)*.1 * devicePixelRatio, o: Math.random()*.5+.15 }));
+}
+function drawParticles(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  particles.forEach(p=>{ p.y += p.vy; p.x += p.vx; if(p.y < -10) p.y = canvas.height+10; ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2); ctx.fillStyle = `rgba(217,164,65,${p.o})`; ctx.fill(); });
+  requestAnimationFrame(drawParticles);
+}
+resizeCanvas(); initParticles(); drawParticles();
+window.addEventListener('resize', () => { resizeCanvas(); initParticles(); });
+
+const heroContent = document.querySelector('.hero-content');
+window.addEventListener('scroll', () => {
+  const y = window.scrollY;
+  if(y < window.innerHeight){ heroContent.style.transform = `translateY(${y*0.18}px)`; heroContent.style.opacity = 1 - (y/window.innerHeight)*1.1; }
+}, { passive:true });
+
+document.querySelectorAll('.faq-item').forEach(item => {
+  const q = item.querySelector('.faq-q'); const a = item.querySelector('.faq-a');
+  q.addEventListener('click', () => {
+    const isOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item.open').forEach(o => { o.classList.remove('open'); o.querySelector('.faq-a').style.maxHeight = null; });
+    if(!isOpen){ item.classList.add('open'); a.style.maxHeight = a.scrollHeight + 'px'; }
+  });
+});
+
+const menuToggle = document.getElementById('menuToggle');
+const navLinks = document.querySelector('.nav-links');
+menuToggle.addEventListener('click', () => {
+  const open = navLinks.style.display === 'flex';
+  navLinks.style.cssText = open ? '' : 'display:flex; position:fixed; top:70px; left:0; right:0; background:#142420; flex-direction:column; padding:24px 32px; gap:20px; margin:0;';
+});
+</script>
+</body>
+</html>
