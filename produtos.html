@@ -15,7 +15,7 @@
     --ink:        #142420;
     --ink-soft:   #1E332D;
     --cream:      #F5F1E7;
-    --cream-soft: #ECE4D3;
+    --cream-soft: #ffffff;
     --coral:      #E8543E;
     --coral-light:#F2775F;
     --leaf:       #7FA65C;
@@ -168,11 +168,24 @@
   .prod-card:hover{ transform:translateY(-6px); box-shadow:0 30px 60px -34px rgba(20,36,32,.28); }
   .prod-card.hidden{ display:none; }
 
-  .prod-img{
-    aspect-ratio:4/3; background:linear-gradient(150deg,#E2D8C4,#CFC0A0);
-    display:flex; align-items:center; justify-content:center; position:relative;
-  }
+.prod-img {
+    width: 100%;
+    height: 240px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.prod-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* ou cover */
+}
   .prod-img span{ font-family:var(--mono); font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--stone-dark); }
+  .prod-card.sold-out{ opacity:.55; }
+  .prod-card.sold-out .prod-cta{ pointer-events:none; background:var(--stone); }
+  .price-updated{ font-family:var(--mono); font-size:10px; color:var(--stone); display:block; margin-top:4px; }
   .prod-partner{
     position:absolute; top:12px; right:12px; background:var(--ink); color:var(--cream);
     font-family:var(--mono); font-size:10px; letter-spacing:.08em; text-transform:uppercase;
@@ -181,7 +194,7 @@
 
   .prod-body{ padding:26px; display:flex; flex-direction:column; gap:14px; flex-grow:1; }
   .prod-cat{ font-family:var(--mono); font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--coral); }
-  .prod-name{ font-family:var(--serif); font-size:23px; }
+  .prod-name{ font-family:var(--serif); font-size:27px; font-weight: bold; }
   .prod-desc{ font-size:14px; color:var(--stone-dark); line-height:1.6; }
   .prod-for{ font-size:12.5px; color:var(--ink); background:#E6DAC0; display:inline-block; padding:6px 12px; border-radius:20px; width:fit-content; }
 
@@ -194,8 +207,9 @@
   .prod-usage{ font-size:12.5px; color:var(--stone); line-height:1.6; border-top:1px dashed #CFC0A0; padding-top:12px; }
 
   .prod-footer{ display:flex; align-items:center; justify-content:space-between; margin-top:auto; padding-top:16px; }
-  .prod-price{ font-family:var(--serif); font-size:18px; }
-  .prod-price span{ font-family:var(--mono); font-size:10.5px; color:var(--stone); display:block; }
+  .prod-price{ font-family:var(--serif); font-size:35px; font-weight: bold; }
+  .prod-price .price-unit{ font-family:var(--mono); font-size:10.5px; color:var(--stone); display:block; }
+  .prod-price .price-original{ font-family:var(--mono); font-size:13px; color:var(--stone); text-decoration:line-through; display:block; font-weight:400; }
   .prod-cta{
     font-family:var(--mono); font-size:11.5px; letter-spacing:.06em; text-transform:uppercase;
     background:var(--coral); color:var(--cream); padding:12px 18px; border-radius:2px;
@@ -301,8 +315,8 @@
     <div class="prod-grid" id="prodGrid">
 
       <!-- CÁPSULAS -->
-      <div class="prod-card reveal" data-cat="capsulas">
-        <div class="prod-img"><span>[Foto do produto]</span></span></div>
+      <div class="prod-card reveal" data-cat="capsulas" data-ml-id="MLB0000000001">
+        <div class="prod-img"><span>[Foto do produto]</span></div>
         <div class="prod-body">
           <span class="prod-cat">Cápsulas</span>
           <h3 class="prod-name">[Nome do Suplemento]</h3>
@@ -314,15 +328,15 @@
           </ul>
           <p class="prod-usage">Como usar: siga as instruções da embalagem. Consulte um profissional de saúde antes de iniciar o uso.</p>
           <div class="prod-footer">
-            <div class="prod-price">R$ 00<span>à vista</span></div>
+            <div class="prod-price"><span class="price-value">R$ 00</span><span class="price-unit">à vista</span></div>
             <a href="#" class="prod-cta" target="_blank" rel="sponsored noopener noreferrer">Comprar →</a>
           </div>
         </div>
       </div>
 
       <!-- WHEY -->
-      <div class="prod-card reveal" data-cat="whey">
-        <div class="prod-img"><span>[Foto do produto]</span></span></div>
+      <div class="prod-card reveal" data-cat="whey" data-ml-id="MLB0000000002">
+        <div class="prod-img"><span>[Foto do produto]</span></div>
         <div class="prod-body">
           <span class="prod-cat">Whey Protein</span>
           <h3 class="prod-name">[Nome / Marca do Whey]</h3>
@@ -334,19 +348,21 @@
           </ul>
           <p class="prod-usage">Como usar: dilua conforme a tabela da embalagem. Não substitui uma alimentação equilibrada.</p>
           <div class="prod-footer">
-            <div class="prod-price">R$ 00<span>por unidade</span></div>
+            <div class="prod-price"><span class="price-value">R$ 00</span><span class="price-unit">por unidade</span></div>
             <a href="#" class="prod-cta" target="_blank" rel="sponsored noopener noreferrer">Comprar →</a>
           </div>
         </div>
       </div>
 
       <!-- CREATINA -->
-      <div class="prod-card reveal" data-cat="creatina">
-        <div class="prod-img"><span>[Foto do produto]</span></span></div>
+      <div class="prod-card reveal" data-cat="creatina" data-ml-id="MLB0000000003">
+<div class="prod-img">
+    <img src="#" alt="Creatina Soldiers Nutrition">
+</div>
         <div class="prod-body">
           <span class="prod-cat">Creatina</span>
-          <h3 class="prod-name">[Nome / Marca da Creatina]</h3>
-          <p class="prod-desc">[Substituir — descrição curta do produto.]</p>
+          <h3 class="prod-name">Marca</h3>
+          <p class="prod-desc">Descrição</p>
           <span class="prod-for">Indicado para quem já treina com regularidade</span>
           <ul class="prod-proscons">
             <li class="pro"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg> Sem sabor, fácil de misturar</li>
@@ -354,15 +370,15 @@
           </ul>
           <p class="prod-usage">Como usar: conforme indicação da embalagem. Consulte um profissional antes de iniciar o uso.</p>
           <div class="prod-footer">
-            <div class="prod-price">R$ 00<span>por unidade</span></div>
+            <div class="prod-price"><span class="price-value">R$ 00</span><span class="price-unit">por unidade</span></div>
             <a href="#" class="prod-cta" target="_blank" rel="sponsored noopener noreferrer">Comprar →</a>
           </div>
         </div>
       </div>
 
       <!-- COQUETELEIRA -->
-      <div class="prod-card reveal" data-cat="coqueteleira">
-        <div class="prod-img"><span>[Foto do produto]</span></span></div>
+      <div class="prod-card reveal" data-cat="coqueteleira" data-ml-id="MLB0000000004">
+        <div class="prod-img"><span>[Foto do produto]</span></div>
         <div class="prod-body">
           <span class="prod-cat">Coqueteleira</span>
           <h3 class="prod-name">[Nome / Marca da Coqueteleira]</h3>
@@ -374,15 +390,15 @@
           </ul>
           <p class="prod-usage">Uso diário, compatível com a maioria dos suplementos em pó.</p>
           <div class="prod-footer">
-            <div class="prod-price">R$ 00<span>por unidade</span></div>
+            <div class="prod-price"><span class="price-value">R$ 00</span><span class="price-unit">por unidade</span></div>
             <a href="#" class="prod-cta" target="_blank" rel="sponsored noopener noreferrer">Comprar →</a>
           </div>
         </div>
       </div>
 
       <!-- BALANÇA -->
-      <div class="prod-card reveal" data-cat="balanca">
-        <div class="prod-img"><span>[Foto do produto]</span></span></div>
+      <div class="prod-card reveal" data-cat="balanca" data-ml-id="MLB0000000005">
+        <div class="prod-img"><span>[Foto do produto]</span></div>
         <div class="prod-body">
           <span class="prod-cat">Balança</span>
           <h3 class="prod-name">[Nome / Marca da Balança]</h3>
@@ -394,15 +410,15 @@
           </ul>
           <p class="prod-usage">Use sempre no mesmo horário do dia pra comparações mais consistentes.</p>
           <div class="prod-footer">
-            <div class="prod-price">R$ 00<span>por unidade</span></div>
+            <div class="prod-price"><span class="price-value">R$ 00</span><span class="price-unit">por unidade</span></div>
             <a href="#" class="prod-cta" target="_blank" rel="sponsored noopener noreferrer">Comprar →</a>
           </div>
         </div>
       </div>
 
       <!-- MARMITA -->
-      <div class="prod-card reveal" data-cat="marmita">
-        <div class="prod-img"><span>[Foto do produto]</span></span></div>
+      <div class="prod-card reveal" data-cat="marmita" data-ml-id="MLB0000000006">
+        <div class="prod-img"><span>[Foto do produto]</span></div>
         <div class="prod-body">
           <span class="prod-cat">Marmitas</span>
           <h3 class="prod-name">[Nome / Kit de Marmitas]</h3>
@@ -414,7 +430,7 @@
           </ul>
           <p class="prod-usage">Compatível com microondas e geladeira — confira as instruções do fabricante.</p>
           <div class="prod-footer">
-            <div class="prod-price">R$ 00<span>kit</span></div>
+            <div class="prod-price"><span class="price-value">R$ 00</span><span class="price-unit">kit</span></div>
             <a href="#" class="prod-cta" target="_blank" rel="sponsored noopener noreferrer">Comprar →</a>
           </div>
         </div>
@@ -500,6 +516,61 @@ filterPills.forEach(pill => {
     });
   });
 });
+
+/* ============ PREÇOS EM TEMPO REAL (Mercado Livre) ============ */
+/* Busca os preços atuais em /api/prices (função serverless) e atualiza
+   os cards que tiverem o atributo data-ml-id preenchido com um ID real
+   (ex: MLB1234567890). Se a chamada falhar ou o card ainda não tiver um
+   ID configurado, o preço estático que já está no HTML continua valendo
+   — nada quebra por causa disso. */
+(async () => {
+  const cards = Array.from(document.querySelectorAll('.prod-card[data-ml-id]'))
+    .filter(card => /^MLB\d+$/.test(card.dataset.mlId)); // ignora os IDs de exemplo (MLB0000000001 etc.)
+
+  if (!cards.length) return;
+
+  const ids = cards.map(c => c.dataset.mlId).join(',');
+
+  try {
+    const res = await fetch(`/api/prices?ids=${encodeURIComponent(ids)}`);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const { prices } = await res.json();
+
+    cards.forEach(card => {
+      const data = prices[card.dataset.mlId];
+      if (!data || data.error) return; // mantém o preço estático como fallback
+
+      const priceBox = card.querySelector('.prod-price');
+      const priceEl = card.querySelector('.price-value');
+      if (!priceBox || !priceEl) return;
+
+      if (!data.available) {
+        priceEl.textContent = 'Indisponível';
+        card.classList.add('sold-out');
+        return;
+      }
+
+      if (typeof data.price === 'number') {
+        priceEl.textContent = data.price.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+      }
+
+      // Se houver preço original maior (promoção ativa), mostra riscado acima
+      let originalEl = priceBox.querySelector('.price-original');
+      if (data.original_price && data.original_price > data.price) {
+        if (!originalEl) {
+          originalEl = document.createElement('span');
+          originalEl.className = 'price-original';
+          priceBox.insertBefore(originalEl, priceEl);
+        }
+        originalEl.textContent = data.original_price.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+      } else if (originalEl) {
+        originalEl.remove();
+      }
+    });
+  } catch (err) {
+    console.warn('Não foi possível atualizar os preços em tempo real, mantendo os valores estáticos:', err);
+  }
+})();
 </script>
 </body>
 </html>
