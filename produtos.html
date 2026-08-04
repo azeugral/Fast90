@@ -355,7 +355,7 @@
       </div>
 
       <!-- CREATINA -->
-      <div class="prod-card" data-ml="https://www.mercadolivre.com.br/creatina-monohidratada-500g-growth-supplements-sem-sabor-em-po/p/MLB66637233?wid=MLB4555189589">
+      <div class="prod-card reveal" data-cat="creatina" data-ml-id="MLB4555189589">
 <div class="prod-img">
     <img src="Imagens/D_NQ_NP_2X_602304-MLA109372354737_032026-F.webp" alt="Creatina Growth">
 </div>
@@ -525,7 +525,7 @@ filterPills.forEach(pill => {
    — nada quebra por causa disso. */
 (async () => {
   const cards = Array.from(document.querySelectorAll('.prod-card[data-ml-id]'))
-    .filter(card => /^MLB\d+$/.test(card.dataset.mlId)); // ignora os IDs de exemplo (MLB0000000001 etc.)
+    .filter(card => /^MLB\d+$/.test(card.dataset.mlId) && !card.dataset.mlId.startsWith('MLB000000')); // ignora os IDs de exemplo (MLB0000000001 etc.)
 
   if (!cards.length) return;
 

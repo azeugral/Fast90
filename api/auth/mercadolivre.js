@@ -1,4 +1,3 @@
-```javascript
 // /api/auth/mercadolivre.js
 //
 // Inicia o processo de autenticação OAuth do Mercado Livre.
@@ -83,13 +82,16 @@ export default async function handler(req, res) {
     // o fluxo PKCE.
     //
 
+    const oauthData =
+      JSON.stringify({ codeVerifier, state });
+
     const cookieValue =
-      encodeURIComponent(codeVerifier);
+      encodeURIComponent(oauthData);
 
 
     res.setHeader(
       "Set-Cookie",
-      `ml_code_verifier=${cookieValue}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=600`
+      `ml_oauth_data=${cookieValue}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=600`
     );
 
 
@@ -157,4 +159,3 @@ export default async function handler(req, res) {
   }
 
 }
-```
