@@ -3,10 +3,13 @@
 // Recebe o código OAuth do Mercado Livre,
 // valida o State,
 // recupera o Code Verifier,
-// e troca o código por tokens.
+// troca o código por tokens,
+// e já salva tudo automaticamente no Redis — não precisa copiar nada.
 //
 // URL:
 // https://fast90.vercel.app/api/auth/mercadolivre/callback
+
+import { saveTokens } from "../../_lib/mercadolivre-tokens.js";
 
 export default async function handler(req, res) {
 
@@ -336,6 +339,31 @@ export default async function handler(req, res) {
 
 
     // --------------------------------------------------------
+    // SALVA OS TOKENS NO REDIS (AUTOMÁTICO)
+    // --------------------------------------------------------
+
+    try {
+      await saveTokens({
+        access_token: data.access_token,
+        refresh_token: data.refresh_token,
+        // expires_in normalmente é 21600s (6h) — renovamos 2min antes
+        expires_at: Date.now() + (data.expires_in - 120) * 1000,
+      });
+    } catch (saveError) {
+      console.error("Erro ao salvar tokens no Redis:", saveError);
+
+      return res.status(500).send(`
+        <h1>Autorizado, mas houve um erro ao salvar</h1>
+        <p>
+          O Mercado Livre autorizou o app, mas não consegui salvar o token
+          no Redis. Verifique se o banco Redis (Upstash) está conectado ao
+          projeto na Vercel — veja o LEIA-ME-CONFIGURACAO.md.
+        </p>
+        <pre>${escapeHtml(String(saveError?.message || saveError))}</pre>
+      `);
+    }
+
+    // --------------------------------------------------------
     // APAGA COOKIE OAUTH
     // --------------------------------------------------------
 
@@ -346,7 +374,7 @@ export default async function handler(req, res) {
 
 
     // --------------------------------------------------------
-    // MOSTRA NOVO REFRESH TOKEN
+    // CONFIRMA SUCESSO
     // --------------------------------------------------------
 
     return res.status(200).send(`
@@ -391,7 +419,7 @@ export default async function handler(req, res) {
           .box {
 
             background:
-              #f4f4f4;
+              #e8f5e9;
 
             padding:
               20px;
@@ -399,27 +427,21 @@ export default async function handler(req, res) {
             border-radius:
               10px;
 
-            word-break:
-              break-all;
-
             border:
-              1px solid #ddd;
+              1px solid #a5d6a7;
 
           }
 
-          .warning {
+          .muted {
 
-            background:
-              #fff3cd;
+            color:
+              #777;
 
-            padding:
-              15px;
-
-            border-radius:
-              8px;
+            font-size:
+              13px;
 
             margin-top:
-              20px;
+              24px;
 
           }
 
@@ -430,55 +452,25 @@ export default async function handler(req, res) {
       <body>
 
         <h1>
-          Autorização concluída!
+          ✅ Autorização concluída!
         </h1>
 
-        <p>
-          O Mercado Livre autorizou sua aplicação com sucesso.
-        </p>
-
-
-        <h2>
-          Novo Refresh Token
-        </h2>
-
-
         <div class="box">
-
-          ${escapeHtml(
-            data.refresh_token
-          )}
-
+          <p>
+            O Mercado Livre autorizou sua aplicação e o token já foi
+            <strong>salvo automaticamente</strong>. Não precisa copiar nem
+            colar nada em lugar nenhum.
+          </p>
+          <p>
+            O site já pode buscar preços atualizados a partir de agora.
+          </p>
         </div>
 
-
-        <div class="warning">
-
-          <strong>
-            IMPORTANTE:
-          </strong>
-
-          <p>
-            Copie o valor acima e coloque na Vercel
-            como a variável:
-          </p>
-
-          <strong>
-            ML_REFRESH_TOKEN
-          </strong>
-
-          <p>
-            Não compartilhe esse token publicamente.
-          </p>
-
-        </div>
-
-
-        <p>
-
-          Depois de salvar o Refresh Token na Vercel,
-          faça um novo deploy.
-
+        <p class="muted">
+          Se algum dia o acesso for revogado (ex: você trocou a senha do
+          Mercado Livre, ou desautorizou o app), é só visitar
+          <code>/api/auth/mercadolivre</code> de novo pra reautorizar —
+          um clique, sem precisar mexer em código.
         </p>
 
       </body>

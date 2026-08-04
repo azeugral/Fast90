@@ -1,28 +1,17 @@
 // /api/prices.js
-// Endpoint: GET /api/prices?ids=MLB66637233, MLB4555189589
+// Endpoint: GET /api/prices?ids=MLB123456789,MLB987654321
 //
-// Busca o preço atualizado de um ou mais anúncios do Mercado Livre e devolve
-// em JSON pro front-end consumir. As credenciais (Client ID/Secret/Refresh
-// Token) ficam SEMPRE aqui no servidor, em variáveis de ambiente — nunca no
-// HTML/JS do site. Isso evita expor suas chaves no navegador do visitante.
+// Busca o preço atualizado de um ou mais anúncios/produtos do Mercado Livre
+// e devolve em JSON pro front-end consumir. As credenciais ficam SEMPRE
+// aqui no servidor — nunca no HTML/JS do site.
 //
-// Variáveis de ambiente necessárias (configurar no painel da Vercel):
-//   ML_CLIENT_ID       -> App ID do seu aplicativo no Mercado Livre Developers
-//   ML_CLIENT_SECRET   -> Secret Key do mesmo aplicativo
-//   ML_REFRESH_TOKEN   -> gerado uma única vez (veja LEIA-ME-CONFIGURACAO.md)
+// Antes de usar, é preciso autorizar o app uma vez visitando
+// /api/auth/mercadolivre (veja o LEIA-ME-CONFIGURACAO.md). Depois disso,
+// o token se renova sozinho pra sempre — sem manutenção manual.
 
-let cachedToken = null;
-let cachedTokenExpiresAt = 0;
+import { getStoredTokens, saveTokens } from './_lib/mercadolivre-tokens.js';
 
-async function getAccessToken() {
-  const now = Date.now();
-
-  // Reaproveita o token em memória enquanto ele ainda for válido
-  // (evita bater no /oauth/token toda hora dentro da mesma execução).
-  if (cachedToken && now < cachedTokenExpiresAt) {
-    return cachedToken;
-  }
-
+async function requestNewTokens(refreshToken) {
   const res = await fetch('https://api.mercadolibre.com/oauth/token', {
     method: 'POST',
     headers: {
@@ -33,71 +22,128 @@ async function getAccessToken() {
       grant_type: 'refresh_token',
       client_id: process.env.ML_CLIENT_ID,
       client_secret: process.env.ML_CLIENT_SECRET,
-      refresh_token: process.env.ML_REFRESH_TOKEN,
+      refresh_token: refreshToken,
     }),
   });
 
   if (!res.ok) {
     const body = await res.text();
-    throw new Error(`Falha ao renovar token do Mercado Livre (${res.status}): ${body}`);
+    const err = new Error(`Falha ao renovar token do Mercado Livre (${res.status}): ${body}`);
+    err.status = res.status;
+    throw err;
   }
 
-  const data = await res.json();
-  cachedToken = data.access_token;
-  // expires_in normalmente é 21600s (6h) — renovamos 2min antes de vencer
-  cachedTokenExpiresAt = now + (data.expires_in - 120) * 1000;
-  return cachedToken;
+  return res.json();
 }
 
+async function getAccessToken(allowRetry = true) {
+  const tokens = await getStoredTokens();
+
+  if (!tokens || !tokens.refresh_token) {
+    const err = new Error(
+      'Nenhuma autorização do Mercado Livre configurada. Acesse /api/auth/mercadolivre uma vez pra autorizar o app.'
+    );
+    err.status = 401;
+    throw err;
+  }
+
+  const now = Date.now();
+  if (tokens.access_token && now < tokens.expires_at) {
+    return tokens.access_token;
+  }
+
+  try {
+    const data = await requestNewTokens(tokens.refresh_token);
+    const newTokens = {
+      access_token: data.access_token,
+      // O Mercado Livre sempre devolve um refresh_token novo — é
+      // fundamental guardar ele, senão a próxima renovação falha.
+      refresh_token: data.refresh_token,
+      expires_at: now + (data.expires_in - 120) * 1000,
+    };
+    await saveTokens(newTokens);
+    return newTokens.access_token;
+  } catch (err) {
+    // Se falhar com 400, pode ser que outra chamada concorrente já tenha
+    // rotacionado o token um instante antes. Espera um pouco e tenta de
+    // novo lendo o valor mais recente do Redis, só uma vez.
+    if (allowRetry && err.status === 400) {
+      await new Promise((r) => setTimeout(r, 500));
+      return getAccessToken(false);
+    }
+    throw err;
+  }
+}
+
+/** Aceita um ID puro (MLB123456) ou uma URL colada inteira do Mercado Livre. */
 function normalizeMercadoLivreId(value) {
   if (!value) return null;
+  const str = decodeURIComponent(String(value)).trim();
 
-  value = decodeURIComponent(String(value)).trim();
-
-  // URL contendo wid=MLB4555189589
-  const wid = value.match(/[?&]wid=(MLB\d+)/i);
+  const wid = str.match(/[?&]wid=(MLB\d+)/i);
   if (wid) return wid[1];
 
-  // URL de anúncio
-  const listing = value.match(/MLB-(\d+)/i);
+  const listing = str.match(/MLB-(\d+)/i);
   if (listing) return `MLB${listing[1]}`;
 
-  // Item ou Product ID informado diretamente
-  const mlb = value.match(/MLB\d+/i);
+  const mlb = str.match(/MLB\d+/i);
   if (mlb) return mlb[0];
 
   return null;
 }
 
-async function fetchItemPrice(itemId, accessToken) {
-  const res = await fetch(
+async function fetchItemPrice(rawId, accessToken) {
+  const itemId = normalizeMercadoLivreId(rawId) || rawId;
+
+  // 1) Tenta primeiro como ID de anúncio (item) — caso mais comum.
+  const itemRes = await fetch(
     `https://api.mercadolibre.com/items/${itemId}?attributes=id,title,price,original_price,available_quantity,status,permalink`,
-    {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    }
+    { headers: { Authorization: `Bearer ${accessToken}` } }
   );
 
-  if (!res.ok) {
-    return {
-      id: itemId,
-      error: true,
-      status: res.status,
-    };
+  if (itemRes.ok) {
+    return buildResult(rawId, await itemRes.json());
   }
 
-  const item = await res.json();
+  // 2) Se não for um item válido, pode ser um ID de página de CATÁLOGO
+  // (ex: URLs com "/p/MLB..."). Nesse caso, busca o produto e pega o
+  // preço de quem está ganhando o "buy box" (a oferta em destaque).
+  const productRes = await fetch(`https://api.mercadolibre.com/products/${itemId}`, {
+    headers: { Authorization: `Bearer ${accessToken}` },
+  });
 
+  if (!productRes.ok) {
+    return { id: rawId, error: true, status: itemRes.status };
+  }
+
+  const product = await productRes.json();
+  const winnerId =
+    (product?.buy_box_winner && (product.buy_box_winner.item_id || product.buy_box_winner)) || null;
+
+  if (!winnerId) {
+    return { id: rawId, error: true, status: 404 };
+  }
+
+  const winnerRes = await fetch(
+    `https://api.mercadolibre.com/items/${winnerId}?attributes=id,title,price,original_price,available_quantity,status,permalink`,
+    { headers: { Authorization: `Bearer ${accessToken}` } }
+  );
+
+  if (!winnerRes.ok) {
+    return { id: rawId, error: true, status: winnerRes.status };
+  }
+
+  return buildResult(rawId, await winnerRes.json());
+}
+
+function buildResult(requestedId, item) {
   return {
-    id: item.id,
-    title: item.title,
-    price: item.price,
-    original_price: item.original_price,
-    available:
-      item.status === "active" &&
-      (item.available_quantity ?? 0) > 0,
-    permalink: item.permalink,
+    id: requestedId,
+    title: item.title ?? null,
+    price: typeof item.price === 'number' ? item.price : null,
+    original_price: typeof item.original_price === 'number' ? item.original_price : null,
+    available: item.status === 'active' && (item.available_quantity ?? 0) > 0,
+    permalink: item.permalink ?? null,
   };
 }
 
@@ -113,10 +159,10 @@ export default async function handler(req, res) {
 
     // Limite de segurança: no máximo 20 itens por chamada
     const ids = idsParam
-    .split(',')
-    .map((s) => normalizeMercadoLivreId(s))
-    .filter(Boolean)
-    .slice(0, 20);
+      .split(',')
+      .map((s) => s.trim())
+      .filter(Boolean)
+      .slice(0, 20);
 
     const accessToken = await getAccessToken();
     const results = await Promise.all(ids.map((id) => fetchItemPrice(id, accessToken)));
@@ -131,6 +177,7 @@ export default async function handler(req, res) {
     res.status(200).json({ updated_at: new Date().toISOString(), prices });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'Erro ao buscar preços', detail: String(err?.message || err) });
+    const status = err?.status === 401 ? 401 : 500;
+    res.status(status).json({ error: 'Erro ao buscar preços', detail: String(err?.message || err) });
   }
 }
