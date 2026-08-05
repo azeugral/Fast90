@@ -1,5 +1,5 @@
 // /api/prices.js
-// Endpoint: GET /api/prices?ids=MLB123456789,MLB987654321
+// Endpoint: GET /api/prices?ids=MLB123456789,MLB987654321, https://www.mercadolivre.com.br/basic-whey-1kg-growth-supplements-chocolate/p/MLB18725403?matt_event_ts=1785896222914&matt_d2id=527b5989-7c4c-4f56-b596-c309b2f8f4ab&matt_tracing_id=cd1d22fc-c328-4798-ba6c-e0d15f5838de#polycard_client=recommendations_home_affiliate-profile&reco_backend=item_decorator&reco_client=home_affiliate-profile&matt_tool_id=28334789&reco_item_pos=0&source=affiliate-profile&reco_backend_type=function&reco_id=dea1338b-e58f-461c-b70c-d998e0efcbec&tracking_id=7fcc9499-7d5e-4fb8-8809-9fd0efea8cdb&c_id=/home/card-featured/element&c_uid=fcab20d4-0e9c-4ca7-9e8c-3e07702b4c2d
 //
 // Busca o preço atualizado de um ou mais anúncios/produtos do Mercado Livre
 // e devolve em JSON pro front-end consumir. As credenciais ficam SEMPRE
