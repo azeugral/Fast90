@@ -177,7 +177,9 @@ export default async function handler(req, res) {
     res.status(200).json({ updated_at: new Date().toISOString(), prices });
   } catch (err) {
     console.error(err);
-    const status = err?.status === 401 ? 401 : 500;
+    let status = 500;
+    if (err?.status === 401) status = 401;
+    if (err?.code === 'REDIS_NOT_CONFIGURED') status = 503;
     res.status(status).json({ error: 'Erro ao buscar preços', detail: String(err?.message || err) });
   }
 }
