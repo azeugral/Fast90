@@ -94,12 +94,13 @@ function normalizeMercadoLivreId(value) {
 
 async function fetchItemPrice(rawId, accessToken) {
   const itemId = normalizeMercadoLivreId(rawId) || rawId;
+  const diagnostics = {};
 
   // Usa o endpoint de "multiget" (/items?ids=...) em vez de /items/{id}.
   // O Mercado Livre passou a bloquear com 403 o endpoint de item único
   // pra itens que não pertencem ao dono do token, mesmo sendo dados
   // públicos — mas o multiget (pensado pra consultar vários itens de
-  // uma vez) continua funcionando normalmente pra esse caso.
+  // uma vez) costuma continuar funcionando pra esse caso.
   const itemRes = await fetch(
     `https://api.mercadolibre.com/items?ids=${itemId}&attributes=id,title,price,original_price,available_quantity,status,permalink`,
     { headers: { Authorization: `Bearer ${accessToken}` } }
@@ -111,17 +112,21 @@ async function fetchItemPrice(rawId, accessToken) {
     if (entry && entry.code === 200 && entry.body) {
       return buildResult(rawId, entry.body);
     }
+    diagnostics.item_multiget = entry ? { code: entry.code, body: entry.body } : { raw: multiget };
+  } else {
+    diagnostics.item_multiget = { http_status: itemRes.status, body: await safeText(itemRes) };
   }
 
-  // Se não for um item válido (ou não vier via multiget), pode ser um ID
-  // de página de CATÁLOGO (ex: URLs com "/p/MLB..."). Nesse caso, busca
-  // o produto e pega o preço de quem está ganhando o "buy box".
+  // Se não for um item válido, pode ser um ID de página de CATÁLOGO
+  // (ex: URLs com "/p/MLB..."). Nesse caso, busca o produto e pega o
+  // preço de quem está ganhando o "buy box" (a oferta em destaque).
   const productRes = await fetch(`https://api.mercadolibre.com/products/${itemId}`, {
     headers: { Authorization: `Bearer ${accessToken}` },
   });
 
   if (!productRes.ok) {
-    return { id: rawId, error: true, status: itemRes.status };
+    diagnostics.product_lookup = { http_status: productRes.status, body: await safeText(productRes) };
+    return { id: rawId, error: true, diagnostics };
   }
 
   const product = await productRes.json();
@@ -129,7 +134,8 @@ async function fetchItemPrice(rawId, accessToken) {
     (product?.buy_box_winner && (product.buy_box_winner.item_id || product.buy_box_winner)) || null;
 
   if (!winnerId) {
-    return { id: rawId, error: true, status: 404 };
+    diagnostics.product_lookup = { note: 'sem buy_box_winner nessa página de catálogo', product };
+    return { id: rawId, error: true, diagnostics };
   }
 
   const winnerRes = await fetch(
@@ -143,9 +149,22 @@ async function fetchItemPrice(rawId, accessToken) {
     if (winnerEntry && winnerEntry.code === 200 && winnerEntry.body) {
       return buildResult(rawId, winnerEntry.body);
     }
+    diagnostics.winner_multiget = winnerEntry
+      ? { code: winnerEntry.code, body: winnerEntry.body }
+      : { raw: winnerMultiget };
+  } else {
+    diagnostics.winner_multiget = { http_status: winnerRes.status, body: await safeText(winnerRes) };
   }
 
-  return { id: rawId, error: true, status: winnerRes.status };
+  return { id: rawId, error: true, diagnostics };
+}
+
+async function safeText(res) {
+  try {
+    return await res.text();
+  } catch {
+    return null;
+  }
 }
 
 function buildResult(requestedId, item) {
