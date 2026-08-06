@@ -315,7 +315,7 @@
     <div class="prod-grid" id="prodGrid">
 
       <!-- CÁPSULAS -->
-      <div class="prod-card reveal" data-cat="capsulas" data-ml-id="MLB0000000001">
+      <div class="prod-card reveal" data-cat="capsulas">
         <div class="prod-img"><span>[Foto do produto]</span></div>
         <div class="prod-body">
           <span class="prod-cat">Cápsulas</span>
@@ -335,7 +335,7 @@
       </div>
 
       <!-- WHEY -->
-      <div class="prod-card reveal" data-cat="whey" data-ml-id="MLB4324797875">
+      <div class="prod-card reveal" data-cat="whey">
         <div class="prod-img"><span>[Foto do produto]</span></div>
         <div class="prod-body">
           <span class="prod-cat">Whey Protein</span>
@@ -349,13 +349,13 @@
           <p class="prod-usage">Como usar: dilua conforme a tabela da embalagem. Não substitui uma alimentação equilibrada.</p>
           <div class="prod-footer">
             <div class="prod-price"><span class="price-value">R$ 00</span><span class="price-unit">por unidade</span></div>
-            <a href="https://meli.la/1Ei2sLP" class="prod-cta" target="_blank" rel="sponsored noopener noreferrer">Comprar →</a>
+            <a href="#" class="prod-cta" target="_blank" rel="sponsored noopener noreferrer">Comprar →</a>
           </div>
         </div>
       </div>
 
       <!-- CREATINA -->
-      <div class="prod-card reveal" data-cat="creatina" data-ml-id="MLB4555189589">
+      <div class="prod-card reveal" data-cat="creatina">
 <div class="prod-img">
     <img src="Imagens/D_NQ_NP_2X_602304-MLA109372354737_032026-F.webp" alt="Creatina Growth">
 </div>
@@ -377,7 +377,7 @@
       </div>
 
       <!-- COQUETELEIRA -->
-      <div class="prod-card reveal" data-cat="coqueteleira" data-ml-id="MLB0000000004">
+      <div class="prod-card reveal" data-cat="coqueteleira">
         <div class="prod-img"><span>[Foto do produto]</span></div>
         <div class="prod-body">
           <span class="prod-cat">Coqueteleira</span>
@@ -397,7 +397,7 @@
       </div>
 
       <!-- BALANÇA -->
-      <div class="prod-card reveal" data-cat="balanca" data-ml-id="MLB0000000005">
+      <div class="prod-card reveal" data-cat="balanca">
         <div class="prod-img"><span>[Foto do produto]</span></div>
         <div class="prod-body">
           <span class="prod-cat">Balança</span>
@@ -417,7 +417,7 @@
       </div>
 
       <!-- MARMITA -->
-      <div class="prod-card reveal" data-cat="marmita" data-ml-id="MLB0000000006">
+      <div class="prod-card reveal" data-cat="marmita">
         <div class="prod-img"><span>[Foto do produto]</span></div>
         <div class="prod-body">
           <span class="prod-cat">Marmitas</span>
@@ -517,44 +517,35 @@ filterPills.forEach(pill => {
   });
 });
 
-/* ============ PREÇOS EM TEMPO REAL (Mercado Livre) ============ */
-/* Busca os preços atuais em /api/prices (função serverless) e atualiza
-   os cards que tiverem o atributo data-ml-id preenchido com um ID real
-   (ex: MLB1234567890). Se a chamada falhar ou o card ainda não tiver um
-   ID configurado, o preço estático que já está no HTML continua valendo
-   — nada quebra por causa disso. */
+/* ============ PREÇOS (painel manual) ============ */
+/* Busca os preços salvos em /api/manual-prices (você atualiza pelo
+   /admin.html) e atualiza os cards pelo atributo data-cat, que já existe
+   em cada card. Se a chamada falhar ou um produto ainda não tiver preço
+   salvo, o valor estático que já está no HTML continua valendo — nada
+   quebra por causa disso. */
 (async () => {
-  const cards = Array.from(document.querySelectorAll('.prod-card[data-ml-id]'))
-    .filter(card => {
-      const id = (card.dataset.mlId || '').trim();
-      // ignora vazio e os IDs de exemplo (MLB0000000001 etc.) — aceita
-      // tanto "MLB123..." quanto uma URL colada inteira, a normalização
-      // do valor acontece no backend (/api/prices).
-      return id.length > 0 && !id.startsWith('MLB000000');
-    });
-
+  const cards = Array.from(document.querySelectorAll('.prod-card[data-cat]'));
   if (!cards.length) return;
 
-  const ids = cards.map(c => c.dataset.mlId).join(',');
-
   try {
-    const res = await fetch(`/api/prices?ids=${encodeURIComponent(ids)}`);
+    const res = await fetch('/api/manual-prices');
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const { prices } = await res.json();
 
     cards.forEach(card => {
-      const data = prices[card.dataset.mlId];
-      if (!data || data.error) return; // mantém o preço estático como fallback
+      const data = prices[card.dataset.cat];
+      if (!data) return; // ainda não configurado no painel — mantém o estático
 
       const priceBox = card.querySelector('.prod-price');
       const priceEl = card.querySelector('.price-value');
       if (!priceBox || !priceEl) return;
 
-      if (!data.available) {
+      if (data.available === false) {
         priceEl.textContent = 'Indisponível';
         card.classList.add('sold-out');
         return;
       }
+      card.classList.remove('sold-out');
 
       if (typeof data.price === 'number') {
         priceEl.textContent = data.price.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
@@ -562,7 +553,7 @@ filterPills.forEach(pill => {
 
       // Se houver preço original maior (promoção ativa), mostra riscado acima
       let originalEl = priceBox.querySelector('.price-original');
-      if (data.original_price && data.original_price > data.price) {
+      if (typeof data.original_price === 'number' && data.original_price > data.price) {
         if (!originalEl) {
           originalEl = document.createElement('span');
           originalEl.className = 'price-original';
@@ -574,7 +565,7 @@ filterPills.forEach(pill => {
       }
     });
   } catch (err) {
-    console.warn('Não foi possível atualizar os preços em tempo real, mantendo os valores estáticos:', err);
+    console.warn('Não foi possível atualizar os preços, mantendo os valores estáticos:', err);
   }
 })();
 </script>
