@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Painel de preços — FAST90</title>
+<meta name="robots" content="noindex, nofollow">
+<style>
+  :root{
+    --ink:        #142420;
+    --ink-soft:   #1E332D;
+    --cream:      #F5F1E7;
+    --coral:      #E8543E;
+    --coral-light:#F2775F;
+    --leaf:       #7FA65C;
+    --stone:      #A79E8E;
+    --stone-dark: #6B6355;
+    --serif: 'Georgia', serif;
+    --mono:  'Courier New', monospace;
+    --sans:  -apple-system, 'Segoe UI', sans-serif;
+  }
+  *{ margin:0; padding:0; box-sizing:border-box; }
+  body{
+    font-family:var(--sans);
+    background:var(--ink);
+    color:var(--cream);
+    min-height:100vh;
+    padding:32px 20px 80px;
+  }
+  .wrap{ max-width:680px; margin:0 auto; }
+
+  .eyebrow{ font-family:var(--mono); font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:var(--coral-light); display:flex; align-items:center; gap:10px; margin-bottom:10px; }
+  .eyebrow::before{ content:''; width:20px; height:1px; background:var(--coral-light); }
+  h1{ font-family:var(--serif); font-weight:400; font-size:clamp(28px,5vw,38px); margin-bottom:6px; }
+  .sub{ color:var(--stone); font-size:14px; margin-bottom:36px; }
+
+  /* --- tela de senha --- */
+  .gate{ max-width:360px; margin:80px auto; text-align:center; }
+  .gate input{ width:100%; margin-top:20px; }
+  .gate button{ width:100%; margin-top:14px; }
+  .gate-error{ color:var(--coral-light); font-size:13px; margin-top:12px; min-height:18px; }
+
+  input[type="text"], input[type="password"], input[type="number"]{
+    background:var(--ink-soft);
+    border:1px solid #2C443C;
+    color:var(--cream);
+    font-family:var(--sans);
+    font-size:15px;
+    padding:11px 14px;
+    border-radius:8px;
+    width:100%;
+  }
+  input:focus{ outline:2px solid var(--coral-light); outline-offset:1px; }
+
+  button{
+    font-family:var(--mono);
+    font-size:13px;
+    letter-spacing:.04em;
+    text-transform:uppercase;
+    background:var(--coral);
+    color:var(--cream);
+    border:none;
+    padding:11px 18px;
+    border-radius:8px;
+    cursor:pointer;
+    transition:background .15s;
+  }
+  button:hover{ background:var(--coral-light); }
+  button:disabled{ background:var(--stone-dark); cursor:default; }
+  button.secondary{ background:transparent; border:1px solid var(--stone-dark); color:var(--stone); }
+  button.secondary:hover{ background:var(--ink-soft); }
+
+  /* --- cards de produto --- */
+  .product{
+    background:var(--ink-soft);
+    border:1px solid #2C443C;
+    border-radius:14px;
+    padding:22px;
+    margin-bottom:16px;
+  }
+  .product-head{ display:flex; align-items:baseline; justify-content:space-between; gap:12px; margin-bottom:16px; flex-wrap:wrap; }
+  .product-name{ font-family:var(--serif); font-size:20px; }
+  .product-status{ font-family:var(--mono); font-size:11px; color:var(--stone); }
+  .product-status.ok{ color:var(--leaf); }
+
+  .fields{ display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:14px; }
+  .field label{ display:block; font-family:var(--mono); font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:var(--stone); margin-bottom:6px; }
+
+  .avail-row{ display:flex; align-items:center; gap:10px; margin-bottom:16px; }
+  .avail-row label{ font-size:13px; color:var(--stone); }
+  .avail-row input[type="checkbox"]{ width:16px; height:16px; }
+
+  .product-foot{ display:flex; align-items:center; justify-content:space-between; gap:12px; }
+  .save-msg{ font-family:var(--mono); font-size:12px; color:var(--leaf); }
+  .save-msg.error{ color:var(--coral-light); }
+
+  .top-actions{ display:flex; justify-content:flex-end; margin-bottom:20px; }
+
+  @media (max-width:480px){
+    .fields{ grid-template-columns:1fr; }
+  }
+
+  [hidden]{ display:none !important; }
+</style>
+</head>
+<body>
+
+  <!-- TELA DE SENHA -->
+  <div class="gate" id="gate">
+    <div class="eyebrow" style="justify-content:center">Acesso restrito</div>
+    <h1>Painel de preços</h1>
+    <p class="sub">Digite a senha configurada na Vercel (ADMIN_PASSWORD).</p>
+    <input type="password" id="passwordInput" placeholder="Senha" autocomplete="current-password">
+    <button id="enterBtn">Entrar</button>
+    <p class="gate-error" id="gateError"></p>
+  </div>
+
+  <!-- PAINEL -->
+  <div class="wrap" id="panel" hidden>
+    <div class="eyebrow">FAST90 · Painel de preços</div>
+    <h1>Atualizar produtos</h1>
+    <p class="sub">Edite o preço de cada produto e clique em salvar. A mudança aparece no site em até 1 minuto.</p>
+
+    <div class="top-actions">
+      <button class="secondary" id="logoutBtn">Sair</button>
+    </div>
+
+    <div id="productList"></div>
+  </div>
+
+<script>
+  const PRODUCTS = [
+    { id: 'capsulas',     name: 'Cápsulas' },
+    { id: 'whey',         name: 'Whey Protein' },
+    { id: 'creatina',     name: 'Creatina' },
+    { id: 'coqueteleira', name: 'Coqueteleira' },
+    { id: 'balanca',      name: 'Balança' },
+    { id: 'marmita',      name: 'Marmitas' },
+  ];
+
+  let password = '';
+
+  const gate = document.getElementById('gate');
+  const panel = document.getElementById('panel');
+  const passwordInput = document.getElementById('passwordInput');
+  const enterBtn = document.getElementById('enterBtn');
+  const gateError = document.getElementById('gateError');
+  const logoutBtn = document.getElementById('logoutBtn');
+  const productList = document.getElementById('productList');
+
+  passwordInput.addEventListener('keydown', e => { if (e.key === 'Enter') tryEnter(); });
+  enterBtn.addEventListener('click', tryEnter);
+  logoutBtn.addEventListener('click', () => {
+    password = '';
+    panel.hidden = true;
+    gate.hidden = false;
+    passwordInput.value = '';
+    passwordInput.focus();
+  });
+
+  async function tryEnter() {
+    const value = passwordInput.value.trim();
+    if (!value) return;
+
+    enterBtn.disabled = true;
+    gateError.textContent = '';
+
+    try {
+      const res = await fetch(`/api/admin/prices?password=${encodeURIComponent(value)}`);
+      const data = await res.json();
+
+      if (res.status === 401) {
+        gateError.textContent = 'Senha incorreta.';
+        return;
+      }
+      if (!res.ok) {
+        gateError.textContent = data.error || 'Erro ao conectar.';
+        return;
+      }
+
+      password = value;
+      gate.hidden = true;
+      panel.hidden = false;
+      renderProducts(data.prices || {});
+    } catch (err) {
+      gateError.textContent = 'Erro de conexão. Tenta de novo.';
+    } finally {
+      enterBtn.disabled = false;
+    }
+  }
+
+  function renderProducts(currentPrices) {
+    productList.innerHTML = '';
+
+    PRODUCTS.forEach(product => {
+      const saved = currentPrices[product.id];
+
+      const card = document.createElement('div');
+      card.className = 'product';
+      card.innerHTML = `
+        <div class="product-head">
+          <span class="product-name">${product.name}</span>
+          <span class="product-status ${saved ? 'ok' : ''}">
+            ${saved ? 'Atualizado ' + formatDate(saved.updated_at) : 'Ainda usando o preço fixo do HTML'}
+          </span>
+        </div>
+        <div class="fields">
+          <div class="field">
+            <label>Preço atual (R$)</label>
+            <input type="number" step="0.01" min="0" class="price-input" value="${saved ? saved.price : ''}" placeholder="Ex: 89.90">
+          </div>
+          <div class="field">
+            <label>Preço original (opcional)</label>
+            <input type="number" step="0.01" min="0" class="original-input" value="${saved && saved.original_price ? saved.original_price : ''}" placeholder="Se tiver desconto">
+          </div>
+        </div>
+        <div class="avail-row">
+          <input type="checkbox" class="available-input" ${!saved || saved.available !== false ? 'checked' : ''} id="avail-${product.id}">
+          <label for="avail-${product.id}">Produto disponível</label>
+        </div>
+        <div class="product-foot">
+          <button class="save-btn">Salvar</button>
+          <span class="save-msg"></span>
+        </div>
+      `;
+
+      card.querySelector('.save-btn').addEventListener('click', () => saveProduct(product, card));
+      productList.appendChild(card);
+    });
+  }
+
+  async function saveProduct(product, card) {
+    const priceInput = card.querySelector('.price-input');
+    const originalInput = card.querySelector('.original-input');
+    const availableInput = card.querySelector('.available-input');
+    const saveBtn = card.querySelector('.save-btn');
+    const saveMsg = card.querySelector('.save-msg');
+    const statusEl = card.querySelector('.product-status');
+
+    const price = parseFloat(priceInput.value);
+    if (isNaN(price) || price < 0) {
+      saveMsg.textContent = 'Informe um preço válido.';
+      saveMsg.classList.add('error');
+      return;
+    }
+
+    const originalRaw = originalInput.value.trim();
+    const original_price = originalRaw ? parseFloat(originalRaw) : null;
+
+    saveBtn.disabled = true;
+    saveMsg.classList.remove('error');
+    saveMsg.textContent = 'Salvando...';
+
+    try {
+      const res = await fetch('/api/admin/prices', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          password,
+          id: product.id,
+          price,
+          original_price,
+          available: availableInput.checked,
+        }),
+      });
+      const data = await res.json();
+
+      if (!res.ok) {
+        saveMsg.textContent = data.error || 'Erro ao salvar.';
+        saveMsg.classList.add('error');
+        return;
+      }
+
+      saveMsg.textContent = 'Salvo ✓';
+      statusEl.textContent = 'Atualizado ' + formatDate(data.saved.updated_at);
+      statusEl.classList.add('ok');
+      setTimeout(() => { saveMsg.textContent = ''; }, 3000);
+    } catch (err) {
+      saveMsg.textContent = 'Erro de conexão.';
+      saveMsg.classList.add('error');
+    } finally {
+      saveBtn.disabled = false;
+    }
+  }
+
+  function formatDate(iso) {
+    if (!iso) return '';
+    const d = new Date(iso);
+    return 'às ' + d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+  }
+
+  passwordInput.focus();
+</script>
+</body>
+</html>

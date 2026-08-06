@@ -1,123 +1,90 @@
-# Preços em tempo real — Mercado Livre
+# Preços do site — painel manual
 
-Versão consolidada. Se você seguiu guias anteriores, esse aqui substitui
-todos — o fluxo ficou mais simples: **não existe mais nenhum passo manual
-de copiar/colar token**. Você autoriza uma vez pelo navegador e pronto.
+⚠️ **Mudança de rumo:** depois de vários testes, confirmamos que o
+Mercado Livre bloqueia (403) a leitura de preço de produtos que não
+pertencem à conta que autorizou o app — isso vale tanto pro endpoint de
+item único quanto pro multiget, e o programa de afiliados deles **não tem
+uma API própria** que resolva isso (é uma limitação da plataforma, não do
+nosso código). Por isso todo o fluxo de autorização OAuth com o Mercado
+Livre foi removido do projeto.
 
-O projeto já vem com tudo implementado:
-- `api/prices.js` — busca o preço atual de um produto no Mercado Livre.
-- `api/auth/mercadolivre.js` e `api/auth/mercadolivre/callback.js` — fluxo
-  de autorização (visita, faz login no Mercado Livre, autoriza, e o token
-  já fica salvo sozinho).
-- O token se renova automaticamente pra sempre depois disso, guardado num
-  banco Redis gratuito — sem manutenção manual.
+No lugar disso: um **painel simples e protegido por senha**, onde você
+mesmo atualiza o preço de cada produto em poucos segundos, sem precisar
+editar código nem fazer commit no GitHub. O site busca esse valor
+automaticamente — a única diferença é que quem digita o preço é você, não
+uma API.
 
-Sobre a Amazon: continua de fora por enquanto. A API antiga (PA-API) foi
-desativada em 15/05/2026, e a substituta (Creators API) só libera acesso
-pra quem já tem 10 vendas qualificadas nos últimos 30 dias.
+O Redis que você já conectou continua sendo usado (agora pra guardar os
+preços em vez do token do Mercado Livre) — não precisa mexer nele de novo.
 
 ---
 
-## 1. Criar o app no Mercado Livre Developers
+## 1. Configurar a senha do painel
 
-1. Acesse **https://developers.mercadolivre.com.br**, faça login com sua
-   conta normal (não precisa ser vendedor) e crie uma aplicação.
-2. Em **"URI de redirect"**, coloque a URL real do callback do seu site
-   (troque pelo seu domínio da Vercel se for diferente):
-   ```
-   https://fast90.vercel.app/api/auth/mercadolivre/callback
-   ```
-   ⚠️ Precisa ser **exatamente** essa URL — se o Mercado Livre redirecionar
-   pra um endereço diferente do configurado aqui, a autorização falha.
-3. Em **Fluxos OAuth**, marque **Authorization Code** e **Refresh Token**.
-4. Em **PKCE necessário**, deixe **LIGADO** — o código já implementa PKCE
-   (é mais seguro, e como a autorização é feita direto pelo site, não tem
-   nenhuma desvantagem em deixar ligado).
-5. Em **Negócios**, marque só **Mercado Livre**.
-6. Em **Permissões**, deixe **"Sem acesso"** em tudo, exceto "Usuários"
-   (que é o mínimo exigido pro OAuth funcionar).
-7. Em **Tópicos**, deixe tudo desmarcado (não usamos webhooks).
-8. Salve e anote o **App ID (Client ID)** e a **Secret Key (Client Secret)**.
-
-## 2. Criar o banco Redis gratuito
-
-1. No seu projeto na Vercel, vá na aba **Storage** → **Create Database**
-   (ou **Marketplace**, dependendo de como a Vercel estiver mostrando).
-2. Escolha **Upstash** → **Redis** → plano gratuito → **Connect** pra
-   vincular ao projeto.
-3. A Vercel injeta sozinha as variáveis de conexão do Redis — não precisa
-   copiar nem colar nada.
-
-## 3. Configurar as variáveis de ambiente
-
-No projeto da Vercel, em **Settings → Environment Variables**, adicione
-(marcando "Production" em cada uma):
+No projeto da Vercel → **Settings → Environment Variables**, adicione:
 
 | Name | Value |
 |---|---|
-| `ML_CLIENT_ID` | o App ID do passo 1 |
-| `ML_CLIENT_SECRET` | a Secret Key do passo 1 |
+| `ADMIN_PASSWORD` | uma senha forte, só sua |
 
-Não precisa mais de `ML_REFRESH_TOKEN` — o token vem do passo 4.
+Marca "Production" e salva. Depois disso, dá um **Redeploy**
+(Deployments → `...` no último → Redeploy) pra ela valer.
 
-Depois de salvar, faça o **deploy** (ou **Redeploy**, se o projeto já
-existia).
+## 2. Subir os arquivos
 
-## 4. Autorizar o app (o único passo manual, feito só uma vez)
+Sobe os arquivos deste pacote pro GitHub (pode substituir tudo). O que
+mudou desde a última vez:
+- **Removidos:** `api/prices.js`, `api/auth/` inteiro (não são mais
+  usados).
+- **Novos:** `api/_lib/redis.js`, `api/manual-prices.js`,
+  `api/admin/prices.js`, `admin.html`.
+- **Editado:** `produtos.html` (busca preço em `/api/manual-prices` em vez
+  da API do Mercado Livre).
 
-Abra no navegador, logado com sua conta do Mercado Livre:
+## 3. Usar o painel
+
+Acesse, logado ou não (a senha é pedida na hora):
 
 ```
-https://fast90.vercel.app/api/auth/mercadolivre
+https://fast90.vercel.app/admin.html
 ```
 
-Você vai ser redirecionado pro Mercado Livre, vai autorizar o app, e volta
-pro seu site com uma mensagem confirmando que o token foi salvo. Pronto —
-não precisa copiar nada, não precisa mexer em variável de ambiente.
+Digita a senha configurada no passo 1, e aparece um card por produto. Pra
+cada um:
+- **Preço atual** — o valor que aparece no site.
+- **Preço original (opcional)** — preenche só se quiser mostrar um valor
+  riscado acima (indicando desconto). Deixa em branco se não tiver
+  promoção.
+- **Produto disponível** — desmarca se o produto estiver esgotado no
+  Mercado Livre (o card mostra "Indisponível" no site).
 
-Se um dia o acesso for revogado (troca de senha, desautorização manual
-etc.), é só visitar essa mesma URL de novo.
+Clica em **Salvar** em cada produto que quiser atualizar. A mudança
+aparece no site em até 1 minuto (o site cacheia por 1 minuto pra não
+sobrecarregar o banco).
 
-## 5. Adicionar os produtos
+A página `/admin.html` não tem link em nenhum lugar do site público —
+só quem sabe o endereço (e a senha) consegue entrar. Se quiser, pode
+favoritar essa URL no navegador do seu celular/computador pra acessar
+rápido sempre que for atualizar uma promoção.
 
-No `produtos.html`, cada card tem um atributo `data-ml-id`. Você pode usar:
-- O ID puro: `data-ml-id="MLB1234567890"`
-- Ou colar a URL inteira do produto: `data-ml-id="https://produto.mercadolivre.com.br/MLB-1234567890-..."`
+## Como funciona por baixo dos panos
 
-Os dois formatos funcionam — o código extrai o ID sozinho. Cards com os IDs
-de exemplo (`MLB0000000...`) são ignorados e mostram o preço estático que
-estiver escrito no HTML, sem gerar erro.
-
-Se o ID for de uma **página de catálogo** (URL com `/p/MLB...`, que reúne
-vários vendedores), o sistema busca automaticamente o preço de quem está
-"ganhando" aquela página no momento — então funciona nos dois casos.
+- Os preços ficam guardados no Redis, numa única chave (`product_prices`),
+  como um objeto com um campo por produto (`capsulas`, `whey`, `creatina`,
+  `coqueteleira`, `balanca`, `marmita` — os mesmos nomes usados no
+  `data-cat` de cada card do `produtos.html`).
+- `/api/manual-prices` — **público**, sem senha. É o que o site chama pra
+  exibir os preços pra qualquer visitante. Só leitura.
+- `/api/admin/prices` — **protegido por senha**. É o que o `admin.html`
+  usa tanto pra ler os valores atuais (ao entrar) quanto pra salvar
+  (`POST`).
+- Se algum produto ainda não tiver preço salvo no painel, o `produtos.html`
+  mantém o valor estático que está escrito direto no HTML — nada quebra.
 
 ## Testar
 
 ```
-https://fast90.vercel.app/api/prices?ids=MLB1234567890
+https://fast90.vercel.app/api/manual-prices
 ```
-
-- JSON com preço → tudo funcionando.
-- `{"error":"...", "detail":"Nenhuma autorização..."}` (401) → falta fazer
-  o passo 4.
-- Erro 500 mencionando Redis → confira se o banco foi conectado ao projeto
-  certo (passo 2) e se deu Redeploy depois.
-
-## Como funciona por baixo dos panos
-
-- `produtos.html` chama `/api/prices?ids=...` pros cards com `data-ml-id`.
-- `api/prices.js` lê o token salvo no Redis, renova se necessário (guardando
-  o novo token de volta no Redis — o Mercado Livre invalida o token anterior
-  a cada uso, então isso é essencial) e busca o preço.
-- Resposta cacheada por 1h na CDN da Vercel (`Cache-Control: s-maxage=3600`)
-  pra não estourar limite de chamadas.
-- Se qualquer coisa falhar, o preço estático do HTML continua aparecendo —
-  nada quebra pro visitante.
-
-## Testar localmente (opcional)
-
-```bash
-npm i -g vercel
-vercel dev
-```
+Deve devolver `{"prices": {...}}` (vazio `{}` até você salvar o primeiro
+preço pelo painel).
