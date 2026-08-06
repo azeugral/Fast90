@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FAST90 — Produtos, Ferramentas e Método para sua Jornada Fitness</title>
+<title>VitaCore — Produtos, Ferramentas e Método para sua Jornada Fitness</title>
 <meta name="description" content="Produtos selecionados, calculadora de IMC gratuita e o método Projeto 90 Dias — tudo num só lugar para treinar, comer bem e emagrecer com estrutura.">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -12,7 +12,7 @@
 
 <style>
   :root{
-    --ink:        #142420;   /* pinho profundo */
+    --ink:        #101010;   /* pinho profundo */
     --ink-soft:   #1E332D;
     --ink-glass:  rgba(255,255,255,.05);
     --cream:      #F5F1E7;   /* marfim frio */
@@ -66,8 +66,9 @@
   header{ position:fixed; top:0; left:0; right:0; z-index:900; padding:22px 0; transition:background .4s, padding .4s, border-color .4s; border-bottom:1px solid transparent; }
   header.scrolled{ background:rgba(20,36,32,.88); backdrop-filter:blur(10px); padding:14px 0; border-color:rgba(255,255,255,.08); }
   nav{ display:flex; align-items:center; justify-content:space-between; gap:24px; }
-  .logo{ font-family:var(--serif); font-size:22px; color:var(--cream); flex-shrink:0; }
+  .logo{ font-family:var(--serif); font-size:22px; color:var(--cream); flex-shrink:0; display:inline-flex; align-items:center; }
   .logo span{ color:var(--coral-light); font-style:italic; }
+  .logo-img{ height:150px; width:auto; display:block; }
   .nav-links{ display:flex; gap:32px; align-items:center; margin-left:auto; margin-right:24px; }
   .nav-links a{ font-size:14px; color:var(--cream); opacity:.72; transition:opacity .25s; }
   .nav-links a:hover{ opacity:1; }
@@ -154,7 +155,16 @@
     display:flex; flex-direction:column; transition:transform .35s var(--ease), box-shadow .35s var(--ease);
   }
   .vit-card:hover{ transform:translateY(-6px); box-shadow:0 30px 60px -34px rgba(20,36,32,.28); }
-  .vit-img{ aspect-ratio:4/3; background:linear-gradient(150deg,#E2D8C4,#CFC0A0); display:flex; align-items:center; justify-content:center; position:relative; }
+  .vit-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* ou cover */
+}
+  .vit-img{
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* ou cover */
+}
   .vit-img span{ font-family:var(--mono); font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--stone-dark); }
   .vit-tag{ position:absolute; top:12px; left:12px; background:var(--ink); color:var(--cream); font-family:var(--mono); font-size:10px; letter-spacing:.08em; text-transform:uppercase; padding:5px 10px; border-radius:20px; }
   .vit-body{ padding:22px; display:flex; flex-direction:column; gap:10px; flex-grow:1; }
@@ -162,7 +172,12 @@
   .vit-desc{ font-size:13.5px; color:var(--stone-dark); line-height:1.6; }
   .vit-foot{ display:flex; justify-content:space-between; align-items:center; margin-top:auto; padding-top:12px; }
   .vit-price{ font-family:var(--serif); font-size:35px; font-weight: bold; }
-  .vit-cta{ font-family:var(--mono); font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:var(--coral); }
+  .prod-cta{
+    font-family:var(--mono); font-size:11.5px; letter-spacing:.06em; text-transform:uppercase;
+    background:var(--coral); color:var(--cream); padding:12px 18px; border-radius:2px;
+    transition:background .25s, transform .25s;
+  }
+  .prod-cta:hover{ background:var(--coral-light); transform:translateY(-2px); }
 
 
   /* ============ CTA DE PROMOÇÃO (vitrine) ============ */
@@ -214,7 +229,7 @@
 
   /* ============ FOOTER ============ */
   footer{ padding:70px 0 34px; }
-  .foot-top{ display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:40px; padding-bottom:50px; border-bottom:1px solid rgba(255,255,255,.1); }
+  .foot-top{ display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:40px; padding-bottom:50px; border-bottom:1px solid rgba(255,255,255,.14); }
   .foot-brand .logo{ margin-bottom:14px; }
   .foot-brand p{ color:var(--stone); font-size:14px; max-width:300px; line-height:1.7; }
   .foot-cols{ display:flex; gap:70px; }
@@ -226,13 +241,17 @@
 
   ::selection{ background:var(--coral); color:var(--cream); }
 </style>
+<link rel="icon" type="image/png" sizes="32x32" href="Imagens/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="Imagens/favicon-16x16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="Imagens/apple-touch-icon.png">
+<link rel="shortcut icon" href="Imagens/favicon.png">
 </head>
 <body>
 
 <header id="siteHeader">
   <div class="wrap">
     <nav>
-      <a href="index.html" class="logo">FAST<span>90</span></a>
+      <a href="index.html" class="logo"><img src="Imagens/LOGO.png" alt="VitaCore" class="logo-img"></a>
       <div class="nav-links">
         <a href="index.html" class="active">Início</a>
         <a href="produtos.html">Outlet</a>
@@ -254,7 +273,7 @@
     </video>
 
     <div class="wrap hero-content">
-        <span class="eyebrow">Fast90 - hub fitness</span>
+        <span class="eyebrow">VitaCore - hub fitness</span>
         <h1>Tudo o que você precisa pra sua <em>jornada fitness</em>, num só lugar.</h1>
         <p class="hero-sub">
             Produtos selecionados, ferramentas gratuitas e um método estruturado
@@ -273,7 +292,7 @@
   <div class="wrap">
     <div class="vit-head reveal">
       <div>
-        <span class="eyebrow">Outlet Fast90</span>
+        <span class="eyebrow">Outlet VitaCore</span>
         <h2 class="section-title">Ofertas que <em>valem a pena</em> conferir.</h2>
         <p class="lede" style="margin-top:8px;">Preços em queda essa semana — direto pro produto, sem enrolação.</p>
       </div>
@@ -289,144 +308,32 @@
 
     <div class="vit-grid">
       <div class="vit-card reveal">
-        <div class="vit-img"><span>[Foto do produto]</span><span class="vit-tag">-00%</span></div>
+        <div class="vit-img"><div class="vit-img"><img src="Imagens/Cápsulas.png" alt="Cápsulas"></div></div>
         <div class="vit-body">
-          <h3 class="vit-name">[Nome do Suplemento]</h3>
-          <p class="vit-desc">[Substituir — descrição curta do produto.]</p>
-          <div class="vit-foot"><span class="vit-price"><s style="color:var(--stone);font-size:20px;">R$ 00</s> R$ 00</span><a href="produtos.html" class="vit-cta">Ver oferta →</a></div>
-        </div>
+          <h3 class="vit-name">Termogênico Therma Burn</h3>
+          <p class="vit-desc">O Termogênico Therma Burn, da renomada marca Dark Lab, é um suplemento formulado para auxiliar no processo de perda de medias e otimização do metabolismo. Cada frasco contém 120 cápsulas, oferecendo um suprimento robusto para uma rotina de emagrecimento e desempenho físico mais eficiente.</p>
+          <a href="https://meli.la/2uBi7GN" class="prod-cta" target="_blank" rel="sponsored noopener noreferrer">Conferir promoção →</a></div>
       </div>
       <div class="vit-card reveal reveal-delay-1">
-        <div class="vit-img"><span>[Foto do produto]</span><span class="vit-tag">-00%</span></div>
+        <div class="vit-img"><div class="vit-img"><img src="Imagens/Whey.png" alt="Whey"></div></div>
         <div class="vit-body">
-          <h3 class="vit-name">[Nome / Marca do Whey]</h3>
-          <p class="vit-desc">[Substituir — descrição curta do produto.]</p>
-          <div class="vit-foot"><span class="vit-price"><s style="color:var(--stone);font-size:20px;">R$ 00</s> R$ 00</span><a href="produtos.html" class="vit-cta">Ver oferta →</a></div>
-        </div>
+          <h3 class="vit-name">Basic Whey 1kg Growth Supplements</h3>
+          <p class="vit-desc">Basic Whey Protein 1kg Chocolate Growth Supplements é um suplemento proteico desenvolvido para complementar a ingestão diária de proteínas de forma prática e acessível. Sua fórmula combina proteínas do soro do leite e carboidratos, sendo uma excelente opção para quem busca aumentar o aporte proteico da dieta no dia a dia.</p>
+          <a href="https://meli.la/1Ei2sLP" class="prod-cta" target="_blank" rel="sponsored noopener noreferrer">Conferir promoção →</a></div>
       </div>
       <div class="vit-card reveal reveal-delay-2">
-        <div class="vit-img"><span>[Foto do produto]</span><span class="vit-tag">-00%</span></div>
+        <div class="vit-img"><div class="vit-img"><img src="Imagens/Creatina.png" alt="Creatina"></div></div>
         <div class="vit-body">
-          <h3 class="vit-name">[Nome / Marca da Balança]</h3>
-          <p class="vit-desc">[Substituir — descrição curta do produto.]</p>
-          <div class="vit-foot"><span class="vit-price"><s style="color:var(--stone);font-size:20px;">R$ 00</s> R$ 00</span><a href="produtos.html" class="vit-cta">Ver oferta →</a></div>
+          <h3 class="vit-name">Creatina 1kg Suplemento Monohidratada em pó 100% Pura</h3>
+          <p class="vit-desc">A Creatina Monohidratada Soldiers Nutrition foi desenvolvida para atletas e praticantes de atividade física que buscam melhorar a performance nos treinos de alta intensidade. Com fórmula em pó de dissolução rápida e 100% creatina monohidratada, ela auxilia no aumento da força e resistência muscular ao longo das sessões.</p>
+          <a href="https://meli.la/2DEgZi1" class="prod-cta" target="_blank" rel="sponsored noopener noreferrer">Conferir promoção →</a>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ============ AVALIAÇÕES ============ -->
-<section class="light" id="avaliacoes">
-  <div class="wrap">
-    <span class="eyebrow reveal">Prova social</span>
-    <h2 class="section-title reveal">Quem já vive o <em>Fast90.</em></h2>
-    <p class="lede reveal">Avaliações reais de quem comprou no outlet e de quem completou o método.</p>
 
-    <div class="rev-subhead reveal">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M21.35 11.1H12v2.9h5.35c-.5 2.5-2.6 4.3-5.35 4.3-3.25 0-5.9-2.65-5.9-5.9s2.65-5.9 5.9-5.9c1.5 0 2.85.55 3.9 1.5l2.2-2.2C16.6 4.15 14.45 3.2 12 3.2 6.9 3.2 2.8 7.3 2.8 12.4S6.9 21.6 12 21.6c5.7 0 9.35-4 9.35-9.65 0-.65-.05-1.15-.15-1.65z" fill="var(--coral)"/></svg>
-      <h3 class="rev-subhead-title">Avaliações do outlet</h3>
-    </div>
-
-    <div class="rev-grid">
-      <div class="rev-card reveal">
-        <div class="rev-stars">★★★★★</div>
-        <p class="rev-text">[Substituir — depoimento real sobre a compra, entrega ou qualidade do produto.]</p>
-        <div class="rev-foot">
-          <span class="rev-name">[Nome do cliente]</span>
-          <span class="rev-source">Google · Compra verificada</span>
-        </div>
-      </div>
-      <div class="rev-card reveal reveal-delay-1">
-        <div class="rev-stars">★★★★★</div>
-        <p class="rev-text">[Substituir — depoimento real sobre o preço ou a promoção aproveitada.]</p>
-        <div class="rev-foot">
-          <span class="rev-name">[Nome do cliente]</span>
-          <span class="rev-source">Google · Compra verificada</span>
-        </div>
-      </div>
-      <div class="rev-card reveal reveal-delay-2">
-        <div class="rev-stars">★★★★★</div>
-        <p class="rev-text">[Substituir — depoimento real sobre atendimento ou recompra.]</p>
-        <div class="rev-foot">
-          <span class="rev-name">[Nome do cliente]</span>
-          <span class="rev-source">Instagram · @fast90.oficial</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="rev-subhead reveal" style="margin-top:60px;">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2"><path d="M12 2l2.6 6.9 7.4.5-5.7 4.8 1.9 7.2L12 17.6 5.8 21.4l1.9-7.2-5.7-4.8 7.4-.5z"/></svg>
-      <h3 class="rev-subhead-title">Histórias de transformação — Projeto 90 Dias</h3>
-    </div>
-
-    <div class="rev-grid transform-grid">
-      <div class="rev-card transform-card reveal">
-        <span class="transform-badge">[Resultado, ex: -12kg em 90 dias]</span>
-        <div class="rev-stars">★★★★★</div>
-        <p class="rev-text">[Substituir — relato real de mudança de vida: como era antes, o que mudou durante o curso, como está hoje.]</p>
-        <div class="rev-foot">
-          <span class="rev-name">[Nome do aluno]</span>
-          <span class="rev-source">Aluno(a) verificado(a)</span>
-        </div>
-      </div>
-      <div class="rev-card transform-card reveal reveal-delay-1">
-        <span class="transform-badge">[Resultado, ex: +8kg de massa magra]</span>
-        <div class="rev-stars">★★★★★</div>
-        <p class="rev-text">[Substituir — relato real sobre disposição, autoestima ou hábitos que mudaram com o método.]</p>
-        <div class="rev-foot">
-          <span class="rev-name">[Nome do aluno]</span>
-          <span class="rev-source">Aluno(a) verificado(a)</span>
-        </div>
-      </div>
-      <div class="rev-card transform-card reveal reveal-delay-2">
-        <span class="transform-badge">[Resultado, ex: manteve o peso após 1 ano]</span>
-        <div class="rev-stars">★★★★★</div>
-        <p class="rev-text">[Substituir — relato real sobre consistência e resultado sustentado no longo prazo.]</p>
-        <div class="rev-foot">
-          <span class="rev-name">[Nome do aluno]</span>
-          <span class="rev-source">Aluno(a) verificado(a)</span>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ============ CTA CURSO — PROJETO 90 DIAS ============ -->
-<section class="dark curso-cta" id="curso">
-  <div class="wrap curso-cta-grid">
-    <div class="reveal">
-      <span class="eyebrow">Projeto 90 Dias</span>
-      <h2 class="section-title">Do ponto onde você está até o corpo e a <em>confiança</em> que você quer.</h2>
-      <p class="lede">Um método estruturado — treino, alimentação e acompanhamento — pra você emagrecer com consistência em 90 dias, sem depender de sorte ou de dietas milagrosas.</p>
-      <ul class="curso-benefits">
-        <li>
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6L9 17l-5-5"/></svg>
-          Plano de treino e alimentação estruturado por fase
-        </li>
-        <li>
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6L9 17l-5-5"/></svg>
-          Acompanhamento real, não apenas um PDF genérico
-        </li>
-        <li>
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6L9 17l-5-5"/></svg>
-          Ferramentas e calculadoras liberadas ao longo do curso
-        </li>
-        <li>
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6L9 17l-5-5"/></svg>
-          Acesso vitalício e atualizações incluídas
-        </li>
-      </ul>
-    </div>
-    <div class="curso-price-card reveal reveal-delay-1">
-      <span class="curso-price-old">R$ 000,00</span>
-      <div class="curso-price-new">R$ 000<span>,00</span></div>
-      <p class="curso-installment">ou em até 12x de R$ 00,00</p>
-      <a href="curso.html" class="btn-primary" style="width:100%; justify-content:center;">Quero começar minha transformação →</a>
-      <p class="curso-trust">Garantia de 7 dias · Acesso imediato</p>
-    </div>
-  </div>
-</section>
 
 <!-- ============ PLAYLIST SPOTIFY (única) ============ -->
 <section class="dark vibe-section" id="playlist">
@@ -448,7 +355,7 @@
   <div class="wrap">
     <div class="foot-top">
       <div class="foot-brand">
-        <a href="index.html" class="logo">FAST<span>90</span></a>
+        <a href="index.html" class="logo"><img src="Imagens/LOGO.png" alt="VitaCore" class="logo-img"></a>
         <p>Produtos, ferramentas e método pra sua jornada fitness — tudo num só lugar, sem enrolação.</p>
       </div>
       <div class="foot-cols">
@@ -460,13 +367,12 @@
         </div>
         <div class="foot-col">
           <h5>Contato</h5>
-          <a href="mailto:contato@fast90.com.br">contato@fast90.com.br</a>
-          <a href="#">@fast90.oficial</a>
+          <a href="#">@VitaCoreHub</a>
         </div>
       </div>
     </div>
     <div class="foot-bottom">
-      <span class="foot-legal">© 2026 FAST90. Todos os direitos reservados.</span>
+      <span class="foot-legal">© 2026 VitaCore. Todos os direitos reservados.</span>
     </div>
   </div>
 </footer>

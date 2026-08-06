@@ -65,7 +65,8 @@
   header{ position:fixed; top:0; left:0; right:0; z-index:900; padding:22px 0; transition:background .4s, padding .4s, border-color .4s; border-bottom:1px solid transparent; }
   header.scrolled{ background:rgba(20,36,32,.88); backdrop-filter:blur(10px); padding:14px 0; border-color:rgba(255,255,255,.08); }
   nav{ display:flex; align-items:center; justify-content:space-between; gap:24px; }
-  .logo{ font-family:var(--serif); font-size:22px; color:var(--cream); flex-shrink:0; }
+  .logo{ font-family:var(--serif); font-size:22px; color:var(--cream); flex-shrink:0; display:inline-flex; align-items:center; }
+  .logo-img{ height:150px; width:auto; display:block; }
   .logo span{ color:var(--coral-light); font-style:italic; }
   .nav-links{ display:flex; gap:32px; align-items:center; margin-left:auto; margin-right:24px; }
   .nav-links a{ font-size:14px; color:var(--cream); opacity:.72; transition:opacity .25s; }
@@ -198,13 +199,17 @@
 
   ::selection{ background:var(--coral); color:var(--cream); }
 </style>
+<link rel="icon" type="image/png" sizes="32x32" href="Imagens/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="Imagens/favicon-16x16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="Imagens/apple-touch-icon.png">
+<link rel="shortcut icon" href="Imagens/favicon.png">
 </head>
 <body>
 
 <header id="siteHeader">
   <div class="wrap">
     <nav>
-      <a href="index.html" class="logo">FAST<span>90</span></a>
+      <a href="index.html" class="logo"><img src="Imagens/LOGO.png" alt="VitaCore" class="logo-img"></a>
       <div class="nav-links">
         <a href="index.html">Início</a>
         <a href="produtos.html">Outlet</a>
@@ -364,17 +369,24 @@
   <div class="wrap">
     <div class="foot-top">
       <div class="foot-brand">
-        <a href="index.html" class="logo">FAST<span>90</span></a>
-        <p>Método estruturado de transformação corporal em 90 dias, com acompanhamento real do primeiro ao último dia.</p>
+        <a href="index.html" class="logo"><img src="Imagens/LOGO.png" alt="VitaCore" class="logo-img"></a>
+        <p>Produtos, ferramentas e método pra sua jornada fitness — tudo num só lugar, sem enrolação.</p>
       </div>
       <div class="foot-cols">
-        <div class="foot-col"><h5>Navegação</h5><a href="index.html">Início</a><a href="produtos.html">Outlet</a><a href="imc.html">Calculadora IMC</a></div>
-        <div class="foot-col"><h5>Contato</h5><a href="mailto:contato@fast90.com.br">contato@fast90.com.br</a><a href="#">@fast90.oficial</a></div>
+        <div class="foot-col">
+          <h5>Navegação</h5>
+          <a href="produtos.html">Outlet</a>
+          <a href="imc.html">Calculadora IMC</a>
+          <a href="curso.html">Curso</a>
+        </div>
+        <div class="foot-col">
+          <h5>Contato</h5>
+          <a href="#">@VitaCoreHub</a>
+        </div>
       </div>
     </div>
     <div class="foot-bottom">
-      <p>Resultados individuais podem variar de pessoa para pessoa. Este produto não substitui acompanhamento médico ou nutricional profissional — consulte um especialista antes de iniciar qualquer programa de emagrecimento.</p>
-      <span class="foot-legal">© 2026 FAST90. Todos os direitos reservados.</span>
+      <span class="foot-legal">© 2026 VitaCore. Todos os direitos reservados.</span>
     </div>
   </div>
 </footer>

@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Outlet Fast90 — Ofertas em Cápsulas, Whey, Creatina e Acessórios</title>
-<meta name="description" content="Outlet Fast90: ofertas selecionadas em cápsulas, whey, creatina e acessórios — com prós, contras e indicação de uso.">
+<title>Outlet VitaCore — Ofertas em Cápsulas, Whey, Creatina e Acessórios</title>
+<meta name="description" content="Outlet VitaCore: ofertas selecionadas em cápsulas, whey, creatina e acessórios — com prós, contras e indicação de uso.">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -63,7 +63,8 @@
   header{ position:fixed; top:0; left:0; right:0; z-index:900; padding:22px 0; transition:background .4s, padding .4s, border-color .4s; border-bottom:1px solid transparent; }
   header.scrolled{ background:rgba(20,36,32,.86); backdrop-filter:blur(10px); padding:14px 0; border-color:rgba(255,255,255,.08); }
   nav{ display:flex; align-items:center; justify-content:space-between; gap:24px; }
-  .logo{ font-family:var(--serif); font-size:22px; color:var(--cream); }
+  .logo{ font-family:var(--serif); font-size:22px; color:var(--cream); display:inline-flex; align-items:center; }
+  .logo-img{ height:150px; width:auto; display:block; }
   .logo span{ color:var(--coral-light); font-style:italic; }
     .nav-links{ display:flex; gap:32px; align-items:center; margin-left:auto; margin-right:24px; }
   .nav-links a{ font-size:14px; color:var(--cream); opacity:.72; transition:opacity .25s; }
@@ -247,20 +248,32 @@
     .kit-cta{ order:2; margin-left:auto; }
   }
 
-  footer{ padding:50px 0 34px; }
-  .foot-bottom{ display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:14px; padding-top:24px; border-top:1px solid rgba(255,255,255,.1); }
-  .foot-bottom p{ font-size:12.5px; color:var(--stone); max-width:680px; line-height:1.6; }
-  .foot-legal{ font-size:12px; color:#5C5648; white-space:nowrap; }
+  footer{ padding:70px 0 34px; }
+  .foot-top{ display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:40px; padding-bottom:50px; border-bottom:1px solid rgba(255,255,255,.14); }
+  .foot-brand .logo{ margin-bottom:14px; }
+  .foot-brand p{ color:var(--stone); font-size:14px; max-width:300px; line-height:1.7; }
+  .foot-cols{ display:flex; gap:70px; }
+  .foot-col h5{ font-family:var(--mono); font-size:11.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--gold); margin-bottom:18px; }
+  .foot-col a, .foot-col p{ display:block; font-size:14px; color:#CFE0D5; margin-bottom:12px; }
+  .foot-bottom{ display:flex; justify-content:space-between; align-items:center; padding-top:26px; flex-wrap:wrap; gap:14px; }
+  .foot-bottom p{ font-size:12.5px; color:var(--stone); max-width:640px; line-height:1.6; }
+  .foot-legal{ font-size:12px; color:#5C5648; }
+
+  ::selection{ background:var(--coral); color:var(--cream); }
 
   ::selection{ background:var(--coral); color:var(--cream); }
 </style>
+<link rel="icon" type="image/png" sizes="32x32" href="Imagens/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="Imagens/favicon-16x16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="Imagens/apple-touch-icon.png">
+<link rel="shortcut icon" href="Imagens/favicon.png">
 </head>
 <body>
 
 <header id="siteHeader">
   <div class="wrap">
     <nav>
-      <a href="index.html" class="logo">FAST<span>90</span></a>
+      <a href="index.html" class="logo"><img src="Imagens/LOGO.png" alt="VitaCore" class="logo-img"></a>
       <div class="nav-links">
         <a href="index.html">Início</a>
         <a href="produtos.html" class="active">Outlet</a>
@@ -284,7 +297,7 @@
 
     <div class="wrap hero-content">
 
-        <span class="eyebrow">Outlet Fast90</span>
+        <span class="eyebrow">Outlet VitaCore</span>
 
         <h1>Ofertas boas, <em>direto ao ponto.</em></h1>
 
@@ -316,11 +329,11 @@
 
       <!-- CÁPSULAS -->
       <div class="prod-card reveal" data-cat="capsulas">
-        <div class="prod-img"><span>[Foto do produto]</span></div>
+        <div class="prod-img"><img src="Imagens/Cápsulas.png" alt="Cápsulas"></div>
         <div class="prod-body">
           <span class="prod-cat">Cápsulas</span>
-          <h3 class="prod-name">[Nome do Suplemento]</h3>
-          <p class="prod-desc">[Substituir — descrição curta do produto, escrita por você, sem termos médicos ou promessa de resultado.]</p>
+          <h3 class="prod-name">Termogênico Therma Burn</h3>
+          <p class="prod-desc">O Termogênico Therma Burn, da renomada marca Dark Lab, é um suplemento formulado para auxiliar no processo de perda de medias e otimização do metabolismo. Cada frasco contém 120 cápsulas, oferecendo um suprimento robusto para uma rotina de emagrecimento e desempenho físico mais eficiente.</p>
           <span class="prod-for">Indicado para quem já tem rotina alimentar estruturada</span>
           <ul class="prod-proscons">
             <li class="pro"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg> Prático de incluir na rotina</li>
@@ -329,18 +342,18 @@
           <p class="prod-usage">Como usar: siga as instruções da embalagem. Consulte um profissional de saúde antes de iniciar o uso.</p>
           <div class="prod-footer">
             <div class="prod-price"><span class="price-value">R$ 00</span><span class="price-unit">à vista</span></div>
-            <a href="#" class="prod-cta" target="_blank" rel="sponsored noopener noreferrer">Comprar →</a>
+            <a href="https://meli.la/2uBi7GN" class="prod-cta" target="_blank" rel="sponsored noopener noreferrer">Comprar →</a>
           </div>
         </div>
       </div>
 
       <!-- WHEY -->
       <div class="prod-card reveal" data-cat="whey">
-        <div class="prod-img"><span>[Foto do produto]</span></div>
+        <div class="prod-img"><img src="Imagens/Whey.png" alt="Whey"></div>
         <div class="prod-body">
           <span class="prod-cat">Whey Protein</span>
-          <h3 class="prod-name">[Nome / Marca do Whey]</h3>
-          <p class="prod-desc">[Substituir — descrição curta: sabor, textura, o que você gosta nele.]</p>
+          <h3 class="prod-name">Basic Whey 1kg Growth Supplements</h3>
+          <p class="prod-desc">Basic Whey Protein 1kg Chocolate Growth Supplements é um suplemento proteico desenvolvido para complementar a ingestão diária de proteínas de forma prática e acessível. Sua fórmula combina proteínas do soro do leite e carboidratos, sendo uma excelente opção para quem busca aumentar o aporte proteico da dieta no dia a dia.</p>
           <span class="prod-for">Indicado para complementar a ingestão de proteína no dia a dia</span>
           <ul class="prod-proscons">
             <li class="pro"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg> Boa relação custo-benefício</li>
@@ -349,7 +362,7 @@
           <p class="prod-usage">Como usar: dilua conforme a tabela da embalagem. Não substitui uma alimentação equilibrada.</p>
           <div class="prod-footer">
             <div class="prod-price"><span class="price-value">R$ 00</span><span class="price-unit">por unidade</span></div>
-            <a href="#" class="prod-cta" target="_blank" rel="sponsored noopener noreferrer">Comprar →</a>
+            <a href="https://meli.la/1Ei2sLP" class="prod-cta" target="_blank" rel="sponsored noopener noreferrer">Comprar →</a>
           </div>
         </div>
       </div>
@@ -357,12 +370,12 @@
       <!-- CREATINA -->
       <div class="prod-card reveal" data-cat="creatina">
 <div class="prod-img">
-    <img src="Imagens/D_NQ_NP_2X_602304-MLA109372354737_032026-F.webp" alt="Creatina Growth">
+    <img src="Imagens/Creatina.png" alt="Creatina Soldiers Nutrition">
 </div>
         <div class="prod-body">
           <span class="prod-cat">Creatina</span>
-          <h3 class="prod-name">Creatina Monohidratada 500g Growth Supplements</h3>
-          <p class="prod-desc">Creatina Monohidratada 500g Growth Supplements é um suplemento alimentar composto por creatina monohidratada pura, desenvolvido para auxiliar no aumento do desempenho físico durante exercícios repetidos de curta duração e alta intensidade, sendo uma excelente opção para complementar a rotina de praticantes de atividades físicas.</p>
+          <h3 class="prod-name">Creatina 1kg Suplemento Monohidratada em pó 100% Pura</h3>
+          <p class="prod-desc">A Creatina Monohidratada Soldiers Nutrition foi desenvolvida para atletas e praticantes de atividade física que buscam melhorar a performance nos treinos de alta intensidade. Com fórmula em pó de dissolução rápida e 100% creatina monohidratada, ela auxilia no aumento da força e resistência muscular ao longo das sessões.</p>
           <span class="prod-for">Indicado para quem já treina com regularidade</span>
           <ul class="prod-proscons">
             <li class="pro"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg> Sem sabor, fácil de misturar</li>
@@ -371,18 +384,18 @@
           <p class="prod-usage">Como usar: conforme indicação da embalagem. Consulte um profissional antes de iniciar o uso.</p>
           <div class="prod-footer">
             <div class="prod-price"><span class="price-value">R$ 00</span><span class="price-unit">por unidade</span></div>
-            <a href="https://meli.la/2DBKcKt" class="prod-cta" target="_blank" rel="sponsored noopener noreferrer">Comprar →</a>
+            <a href="https://meli.la/2DEgZi1" class="prod-cta" target="_blank" rel="sponsored noopener noreferrer">Comprar →</a>
           </div>
         </div>
       </div>
 
       <!-- COQUETELEIRA -->
       <div class="prod-card reveal" data-cat="coqueteleira">
-        <div class="prod-img"><span>[Foto do produto]</span></div>
+        <div class="prod-img"><img src="Imagens/Coqueteleira.png" alt="Coqueteleira"></div>
         <div class="prod-body">
           <span class="prod-cat">Coqueteleira</span>
-          <h3 class="prod-name">[Nome / Marca da Coqueteleira]</h3>
-          <p class="prod-desc">[Substituir — descrição curta: compartimentos, capacidade, material.]</p>
+          <h3 class="prod-name">Garrafa Térmica Água E Café Squeeze Inox Academia</h3>
+          <p class="prod-desc">A Garrafa Térmica ZORNIX 800ml é ideal para quem busca praticidade, resistência e conservação térmica no dia a dia. Perfeita para usar como garrafa de água térmica, garrafa térmica para café, squeeze térmica inox, garrafa para academia, garrafa para escritório, viagens, trilhas, camping, carro, mochila, faculdade e rotina diária.</p>
           <span class="prod-for">Indicado pra quem treina fora de casa</span>
           <ul class="prod-proscons">
             <li class="pro"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg> Compartimento extra pra suplemento</li>
@@ -391,18 +404,18 @@
           <p class="prod-usage">Uso diário, compatível com a maioria dos suplementos em pó.</p>
           <div class="prod-footer">
             <div class="prod-price"><span class="price-value">R$ 00</span><span class="price-unit">por unidade</span></div>
-            <a href="#" class="prod-cta" target="_blank" rel="sponsored noopener noreferrer">Comprar →</a>
+            <a href="https://meli.la/1FT9T22" class="prod-cta" target="_blank" rel="sponsored noopener noreferrer">Comprar →</a>
           </div>
         </div>
       </div>
 
       <!-- BALANÇA -->
       <div class="prod-card reveal" data-cat="balanca">
-        <div class="prod-img"><span>[Foto do produto]</span></div>
+        <div class="prod-img"><img src="Imagens/Balança.png" alt="Balança"></div>
         <div class="prod-body">
           <span class="prod-cat">Balança</span>
-          <h3 class="prod-name">[Nome / Marca da Balança]</h3>
-          <p class="prod-desc">[Substituir — descrição curta: o que ela mede, app compatível, etc.]</p>
+          <h3 class="prod-name">Balança Digital De Precisão 10kg</h3>
+          <p class="prod-desc">Descubra a praticidade e a precisão na sua cozinha com a Balança Digital Davely Cozinha Alta Precisão 10kg. Ideal para uso doméstico e profissional, este equipamento combina tecnologia de ponta com um design moderno e elegante, permitindo que você pese alimentos com facilidade e confiabilidade. Seja para preparar receitas elaboradas, controlar porções ou confeccionar doces, a balança digital é a parceira ideal para garantir a exatidão nos seus pratos.</p>
           <span class="prod-for">Indicado pra quem quer acompanhar a evolução ao longo dos 90 dias</span>
           <ul class="prod-proscons">
             <li class="pro"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg> Sincroniza com app no celular</li>
@@ -411,18 +424,18 @@
           <p class="prod-usage">Use sempre no mesmo horário do dia pra comparações mais consistentes.</p>
           <div class="prod-footer">
             <div class="prod-price"><span class="price-value">R$ 00</span><span class="price-unit">por unidade</span></div>
-            <a href="#" class="prod-cta" target="_blank" rel="sponsored noopener noreferrer">Comprar →</a>
+            <a href="https://meli.la/1c1i7mG" class="prod-cta" target="_blank" rel="sponsored noopener noreferrer">Comprar →</a>
           </div>
         </div>
       </div>
 
       <!-- MARMITA -->
       <div class="prod-card reveal" data-cat="marmita">
-        <div class="prod-img"><span>[Foto do produto]</span></div>
+        <div class="prod-img"><img src="Imagens/Marmita.png" alt="Marmita"></div>
         <div class="prod-body">
           <span class="prod-cat">Marmitas</span>
-          <h3 class="prod-name">[Nome / Kit de Marmitas]</h3>
-          <p class="prod-desc">[Substituir — descrição curta: quantidade de potes, material, se vai no microondas.]</p>
+          <h3 class="prod-name">Kit 10 Pote De Vidro Marmita Hermético</h3>
+          <p class="prod-desc">Mantenha seus alimentos sempre frescos, organizados e protegidos com este Conjunto de 10 Potes de Vidro Herméticos de 640ml. Fabricados em vidro borossilicato, muito mais resistente que o vidro comum, eles suportam variações de temperatura e podem ir do freezer ao micro-ondas ou forno (sempre sem a tampa) sem preocupações.</p>
           <span class="prod-for">Indicado pra quem organiza as refeições da semana</span>
           <ul class="prod-proscons">
             <li class="pro"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg> Compartimentos ajudam no controle de porções</li>
@@ -431,7 +444,7 @@
           <p class="prod-usage">Compatível com microondas e geladeira — confira as instruções do fabricante.</p>
           <div class="prod-footer">
             <div class="prod-price"><span class="price-value">R$ 00</span><span class="price-unit">kit</span></div>
-            <a href="#" class="prod-cta" target="_blank" rel="sponsored noopener noreferrer">Comprar →</a>
+            <a href="https://meli.la/2UMb9V7" class="prod-cta" target="_blank" rel="sponsored noopener noreferrer">Comprar →</a>
           </div>
         </div>
       </div>
@@ -443,34 +456,34 @@
 <!-- ============ KIT COMPLETO 90 DIAS ============ -->
 <section class="dark">
   <div class="wrap">
-    <span class="eyebrow reveal">Curadoria fast90</span>
+    <span class="eyebrow reveal">Curadoria VitaCore</span>
     <h2 class="section-title reveal">Meu kit completo <em>para os 90 dias.</em></h2>
     <p class="lede reveal">Se você não quer escolher item por item, esse é o combo que eu mesmo usaria do início ao fim do programa.</p>
 
     <div class="kit-list">
       <div class="kit-item reveal">
         <span class="kit-badge">01</span>
-        <div class="kit-info"><span class="kit-cat">Cápsulas</span><h4>[Nome do Suplemento]</h4></div>
-        <a href="#" class="kit-cta" target="_blank" rel="sponsored noopener noreferrer">Ver produto</a>
+        <div class="kit-info"><span class="kit-cat">Cápsulas</span><h4>Termogênico Therma Burn</h4></div>
+        <a href="https://meli.la/2uBi7GN" class="kit-cta" target="_blank" rel="sponsored noopener noreferrer">Ver produto</a>
       </div>
       <div class="kit-item reveal">
         <span class="kit-badge">02</span>
-        <div class="kit-info"><span class="kit-cat">Whey</span><h4>[Nome / Marca do Whey]</h4></div>
-        <a href="#" class="kit-cta" target="_blank" rel="sponsored noopener noreferrer">Ver produto</a>
+        <div class="kit-info"><span class="kit-cat">Whey</span><h4>Basic Whey 1kg Growth Supplements</h4></div>
+        <a href="https://meli.la/1Ei2sLP" class="kit-cta" target="_blank" rel="sponsored noopener noreferrer">Ver produto</a>
       </div>
       <div class="kit-item reveal">
         <span class="kit-badge">03</span>
-        <div class="kit-info"><span class="kit-cat">Creatina</span><h4>[Nome / Marca da Creatina]</h4></div>
-        <a href="#" class="kit-cta" target="_blank" rel="sponsored noopener noreferrer">Ver produto</a>
+        <div class="kit-info"><span class="kit-cat">Creatina</span><h4>Creatina 1kg Suplemento Monohidratada em pó 100% Pura</h4></div>
+        <a href="https://meli.la/1ejvY2S" class="kit-cta" target="_blank" rel="sponsored noopener noreferrer">Ver produto</a>
       </div>
       <div class="kit-item reveal">
         <span class="kit-badge">04</span>
-        <div class="kit-info"><span class="kit-cat">Coqueteleira</span><h4>[Nome / Marca da Coqueteleira]</h4></div>
-        <a href="#" class="kit-cta" target="_blank" rel="sponsored noopener noreferrer">Ver produto</a>
+        <div class="kit-info"><span class="kit-cat">Coqueteleira</span><h4>Garrafa Térmica Água E Café Squeeze Inox Academia</h4></div>
+        <a href="https://meli.la/1FT9T22" class="kit-cta" target="_blank" rel="sponsored noopener noreferrer">Ver produto</a>
       </div>
       <div class="kit-item reveal">
         <span class="kit-badge">05</span>
-        <div class="kit-info"><span class="kit-cat">Balança</span><h4>[Nome / Marca da Balança]</h4></div>
+        <div class="kit-info"><span class="kit-cat">Balança</span><h4>Balança Digital De Precisão 10kg</h4></div>
         <a href="#" class="kit-cta" target="_blank" rel="sponsored noopener noreferrer">Ver produto</a>
       </div>
     </div>
@@ -479,8 +492,26 @@
 
 <footer class="dark">
   <div class="wrap">
+    <div class="foot-top">
+      <div class="foot-brand">
+        <a href="index.html" class="logo"><img src="Imagens/LOGO.png" alt="VitaCore" class="logo-img"></a>
+        <p>Produtos, ferramentas e método pra sua jornada fitness — tudo num só lugar, sem enrolação.</p>
+      </div>
+      <div class="foot-cols">
+        <div class="foot-col">
+          <h5>Navegação</h5>
+          <a href="produtos.html">Outlet</a>
+          <a href="imc.html">Calculadora IMC</a>
+          <a href="curso.html">Curso</a>
+        </div>
+        <div class="foot-col">
+          <h5>Contato</h5>
+          <a href="#">@VitaCoreHub</a>
+        </div>
+      </div>
+    </div>
     <div class="foot-bottom">
-      <span class="foot-legal">© 2026 FAST90. Todos os direitos reservados.</span>
+      <span class="foot-legal">© 2026 VitaCore. Todos os direitos reservados.</span>
     </div>
   </div>
 </footer>
